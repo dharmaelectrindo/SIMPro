@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'SUPER ADMIN',
             'username' => 'supermin',
             'password' => 'super123',
-            'email' => 'dikri.hakim@dem.dharmap.com',
+            'email' => 'apps.development@dem.dharmap.com',
             'picture' => 'supermin_avatar.png',
         ]);
 
