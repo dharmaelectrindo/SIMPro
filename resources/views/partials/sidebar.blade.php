@@ -49,10 +49,44 @@
             <li class="side-nav-item">
                 <a href="index.html" class="side-nav-link">
                     <i class="uil-chart-pie-alt"></i>
-                    {{-- <span class="badge bg-success float-end">5</span> --}}
                     <span> Dashboard </span>
                 </a>
             </li>
+
+            <li class="side-nav-item">
+                <a data-bs-toggle="collapse" href="#sidebarMasterData" aria-expanded="false" aria-controls="sidebarMasterData" class="side-nav-link">
+                    <i class="uil-briefcase"></i>
+                    <span> Master Data </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="sidebarMasterData">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a href="/users">Employee</a>
+                        </li>
+                        <li>
+                            <a href="/roles">Department</a>
+                        </li>
+                        <li>
+                            <a href="/permissions">Template</a>
+                        </li>
+                        <li>
+                            <a href="/permissions">Task</a>
+                        </li>
+                        <li>
+                            <a href="/temp">Template</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="side-nav-item">
+                <a href="/projects" class="side-nav-link">
+                    <i class="uil-briefcase"></i>
+                    <span> Projects </span>
+                </a>
+            </li>
+
 
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#sidebarUserManagement" aria-expanded="false" aria-controls="sidebarUserManagement" class="side-nav-link">
