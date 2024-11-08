@@ -1,0 +1,82 @@
+@font-face {
+    font-family: Atlas;
+    src: url(fonts/AtlasGroteskWeb.ttf);
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url(fonts/Poppins-Regular.ttf);
+}
+
+body{
+	font-family: 'Atlas';
+    font-size: 10pt;
+}
+
+label{
+    font-family: 'Atlas';
+    font-size: 10pt;
+}
+
+h1{
+	font-family: 'Poppins';
+	font-size: 28pt;
+	font-variant: inherit;
+}
+
+h2{
+	font-family: 'Poppins';
+	font-size: 18pt;
+	font-variant: inherit;
+}
+
+h3{
+	font-family: 'Poppins';
+	font-size: 14pt;
+	font-variant: inherit;
+}
+
+h4{
+	font-family: 'Poppins';
+	font-size: 12pt;
+	font-variant: inherit;
+}
+
+h5{
+	font-family: 'Poppins';
+	font-size: 10pt;
+	font-variant: inherit;
+}
+
+table{
+	font-family: 'Atlas';
+    font-size: 11pt;
+}
+
+.btn{
+	font-family: 'Atlas';
+    font-size: 11pt;
+}
+
+/*
+@media all and (max-width: 980px) {
+    .footer{
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+    }
+@media not all and (min-width: 270px) {
+    .footer{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+    }
+} */
+
+
+
+
+
+

@@ -1,0 +1,345 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use DataTables;
+use File;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
+
+ 
+class UserController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('permission:user menu', ['only' => ['users']]);
+        $this->middleware('permission:user create', ['only' => ['create','store','getRoles']]);
+        $this->middleware('permission:user edit', ['only' => ['edit']]);
+        $this->middleware('permission:user delete', ['only' => ['delete']]);
+    }
+
+
+    public function login()
+    {
+        if (Auth::check()) { 
+            return redirect('/home');
+        }else{
+            return view('auth.login');
+        }
+    }
+
+    public function login_action(Request $request)
+    {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+        if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
+            $request->session()->regenerate();
+            return redirect()->intended('/home');
+        }
+
+        return back()->withErrors([
+            'password' => 'Username atau Password salah',
+        ]);
+    }
+
+
+    public function change_password(Request $request)
+    {
+        // validasi
+        $validator = Validator::make($request->all(), [
+            'old_password'=>[
+                'required', function($attribute, $value, $fails){
+                    if( !\Hash::check($value, Auth::user()->password) ){
+                        return $fail(__('Password yang anda masukan salah'));
+                    }
+                },
+                'min:8',
+                'max:30'
+            ],
+            'new_password' => 'required|min:8|max:30',
+            'new_password_confirmation' => 'required|same:new_password'
+        ],[
+            'old_password.required'=>'Masukan password anda',
+            'old_password.min'=>'Password anda minimal 8 karakter',
+            'old_password.max'=>'Password anda maksimal 30 karakter',
+            'new_password.required'=>'Masukan password baru anda',
+            'new_password.min'=>'Password baru minimal 8 karakter',
+            'new_password.max'=>'Password baru maksimal 30 karakter',
+            'new_password_confirmation.required'=>'Konfirmasi kembali password baru anda',
+            'new_password_confirmation.same'=>'Password baru dan konfirmasi password harus sama',
+        ]);
+
+        if (!$validator->passes()) {
+            return response()->json(['error'=>$validator->errors()->all()]);
+        }else{
+
+            $update = User::find(Auth::user()->id)->update(['password'=>Hash::make($request->new_password)]);
+
+            if( !$update ){
+                //  return response
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Password berhasil di perbaharui',
+                ]);
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Password gagal di perbaharui',
+                ]);
+            }
+        }
+
+    }
+
+
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
+
+
+    public function users(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = User::with('roles')->select(['id', 'name', 'email', 'username'])->orderBy('name', 'ASC');
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('roles', function($data) {
+                    $badges = '';
+                    foreach ($data->roles as $role) {
+                        $badges .= '<span class="badge bg-warning">' . $role->name . '</span> ';
+                    }
+                    return $badges;
+                })
+                ->addColumn('action', function($row) {
+                    $btn = '';                 
+                    if (Auth::user()->can('user edit')) {
+                        $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class=" ri-edit-line fw-semibold align-middle me-1"></i> Edit </a>';
+                    }               
+                    if (Auth::user()->can('user delete')) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i> Delete</a>';
+                    }
+                    
+                    return $btn;
+                })
+                ->rawColumns(['roles', 'action'])
+                ->make(true);
+        }
+
+        return view('modules.user_role_permission.user.user', [
+            'title' => 'Users',
+            // 'roles' => Role::all(),
+        ]);
+    }
+
+
+    // public function store(Request $request)
+    // {
+    //     $user   = Auth::user();
+   
+    //     // validasi
+    //     $validator = Validator::make($request->all(), [
+    //         'name' => 'required|string|max:255',
+    //         'username' => 'required|unique:users,username,'.$request->userID,
+    //         'email' => 'required|max:255|unique:users,email,'.$request->userID,
+    //         'password' => 'required|string|min:8|max:20',
+    //         'roles' => 'required',
+    //     ], [
+    //         'name.required' => 'Name harus diisi.',
+    //         'name.string' => 'Name harus berupa karakter.',
+    //         'name.max' => 'Name maksimal 255 karakter .',
+    //         'username.required' => 'Username harus diisi.',
+    //         'username.unique' => 'Username sudah ada.',
+    //         'email.required' => 'Email harus diisi.',
+    //         'email.max' => 'Email maksimal 255 karakter.',
+    //         'email.unique' => 'Email sudah terdaftar.',
+    //         'password.required' => 'Password harus diisi.',
+    //         'password.string' => 'Password harus berupa string.',
+    //         'password.min' => 'Password minimal 8 karakter.',
+    //         'password.max' => 'Password maksimal 20 karakter.',
+    //         'roles.required' => 'Roles harus diisi'
+    //     ]);
+
+    //     if (!$validator->passes()) {
+    //         return response()->json(['error'=>$validator->errors()->all()]);
+    //     }
+
+
+    //     /** Make avatar */
+    //     $path = 'images/users/';
+    //     $fontPath = public_path('build/assets/fonts/Poppins-Regular.ttf');
+    //     $char = strtoupper($request->name[0]);
+    //     $newAvatarName = $request->username.'_avatar';
+    //     $dest = $path . $newAvatarName . '.png'; // Ensure the file has a .png extension
+    
+    //     // Assuming makeAvatar function returns true if successful
+    //     $createAvatar = makeAvatar($fontPath, $dest, $char, 'png'); // Pass 'png' as the format parameter
+    //     $picture = $createAvatar ? $newAvatarName . '.png' : '';
+    
+    //     $user = User::updateOrCreate(
+    //         ['id' => $request->userID],
+    //         [
+    //             'name' => $request->name,
+    //             'email' => $request->email,
+    //             'username' => $request->username,
+    //             'password' => Hash::make($request->password),
+    //             'picture' => $picture
+    //         ]
+    //     );
+    
+    //     $user->syncRoles($request->roles);
+    
+    //     // Return success response
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Data berhasil disimpan',
+    //     ]);
+
+    // }
+
+
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'username' => 'required|unique:users,username,' . $request->userID,
+            'email' => 'required|max:255|unique:users,email,' . $request->userID,
+            'password' => 'nullable|string|min:8|max:20', // Allow nullable for update
+            'roles' => 'required',
+        ], [
+            'name.required' => 'Name harus diisi.',
+            'name.string' => 'Name harus berupa karakter.',
+            'name.max' => 'Name maksimal 255 karakter.',
+            'username.required' => 'Username harus diisi.',
+            'username.unique' => 'Username sudah ada.',
+            'email.required' => 'Email harus diisi.',
+            'email.max' => 'Email maksimal 255 karakter.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.string' => 'Password harus berupa string.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.max' => 'Password maksimal 20 karakter.',
+            'roles.required' => 'Roles harus diisi'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->all()]);
+        }
+
+        // Generate avatar
+        $path = 'images/users/';
+        $fontPath = public_path('fonts/Poppins-Regular.ttf');
+        $char = strtoupper($request->name[0]);
+        $newAvatarName = $request->username . '_avatar';
+        $dest = $path . $newAvatarName . '.png';
+
+        // Check if image already exists and delete it
+        if (Storage::exists($dest)) {
+            Storage::delete($dest);
+        }
+
+        // Always create a new avatar
+        $createAvatar = makeAvatar($fontPath, $dest, $char, 'png');
+        $picture = $createAvatar ? $newAvatarName . '.png' : '';
+
+        // Data for update or create
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'username' => $request->username,
+            'picture' => $picture,
+        ];
+
+        // If password is provided, hash and add it to the data array
+        if (!empty($request->password)) {
+            $data['password'] = $request->password;
+        }
+
+        // Update or create user
+        $user = User::updateOrCreate(
+            ['id' => $request->userID],
+            $data
+        );
+
+        $user->syncRoles($request->roles);
+
+        // Return success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil disimpan',
+        ]);
+    }
+
+
+
+
+    public function edit($id)
+    {
+        $user = User::with('roles')->findOrFail($id); // Ensure the user is found or fail with a 404 error
+        $roles = Role::pluck('name', 'name')->all(); // Get all roles
+
+        $hash = $user->password;
+        
+
+        // try {
+        //     // Attempt to decrypt the encrypted data
+        //     $decryptedPass = Crypt::decryptString($hash);
+        // } catch (DecryptException $e) {
+        //     return response()->json(['error' => 'Failed to decrypt data'], 500);
+        // }
+
+        return response()->json([
+            'user' => $user,
+            'roles' => $roles,
+            // 'password' => $user->password,
+        ]);
+    }
+
+
+    public function delete(Request $request)
+    {
+        // Attempt to find the user by ID
+        $user = User::findOrFail($request->id);
+
+        // Delete the user's picture if it exists
+        if ($user->picture) {
+            $picturePath = public_path('images/users/' . $user->username. '_avatar.png');
+            if (File::exists($picturePath)) {
+                unlink($picturePath); // Delete the picture file directly
+            }
+        }
+
+        // Delete the user
+        $user->delete();
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'User deleted successfully.');
+    }
+
+
+    public function getRoles(Request $request)
+    {
+        $roles = Role::all(); // Fetch all roles
+        return response()->json($roles);
+    }
+
+
+
+
+}
