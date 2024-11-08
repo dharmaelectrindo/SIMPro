@@ -55,26 +55,23 @@
 
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#sidebarMasterData" aria-expanded="false" aria-controls="sidebarMasterData" class="side-nav-link">
-                    <i class="uil-briefcase"></i>
+                    <i class="uil-layers"></i>
                     <span> Master Data </span>
                     <span class="menu-arrow"></span>
                 </a>
                 <div class="collapse" id="sidebarMasterData">
                     <ul class="side-nav-second-level">
                         <li>
-                            <a href="/users">Employee</a>
+                            <a href="/employees">Employees</a>
                         </li>
                         <li>
-                            <a href="/roles">Department</a>
+                            <a href="/department">Department</a>
                         </li>
                         <li>
-                            <a href="/permissions">Template</a>
+                            <a href="/templates">Templates</a>
                         </li>
                         <li>
-                            <a href="/permissions">Task</a>
-                        </li>
-                        <li>
-                            <a href="/temp">Template</a>
+                            <a href="/tasks">Tasks</a>
                         </li>
                     </ul>
                 </div>
@@ -108,19 +105,6 @@
                     </ul>
                 </div>
             </li>
-
-
-            <!-- Help Box -->
-            <div class="help-box text-white text-center">
-                <a href="javascript: void(0);" class="float-end close-btn text-white">
-                    {{-- <i class="mdi mdi-close"></i> --}}
-                </a>
-                <img src="hyper/src/assets/images/svg/help-icon.svg" height="90" alt="Helper Icon Image" />
-                <h5 class="mt-3">User Detail</h5>
-                <p class="mb-3">Upgrade to plan to get access to unlimited reports</p>
-            </div>
-            <!-- end Help Box -->
-
 
         </ul>
         <!--- End Sidemenu -->
