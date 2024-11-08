@@ -9,6 +9,19 @@ use App\Http\Controllers\RoleController;
 
 Auth::routes();
 
+Route::post('/login', function ()
+{
+    $credentials = request()->only('username', 'password');
+ 
+    if (auth()->attempt($credentials))
+    {
+        auth()->logoutOtherDevices(request()->password);
+ 
+        return redirect()->intended();
+    }
+    return back()->withStatus('Invalid credentials');
+ 
+});
 // HOME //
 Route::get('/', [HomeController::class, 'index'])->middleware('auth');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
