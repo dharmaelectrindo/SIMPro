@@ -22,6 +22,8 @@ Route::post('/login', function ()
     return back()->withStatus('Invalid credentials');
  
 });
+
+
 // HOME //
 Route::get('/', [HomeController::class, 'index'])->middleware('auth');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -29,7 +31,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Login
 Route::get('/login', [UserController::class, 'login'])->name('login');
 Route::post('login', [UserController::class, 'login_action'])->name('login.action');
-// Route::get('logout', [UserController::class, 'logout'])->name('logout');
 Route::post('change-password', [UserController::class, 'change_password'])->name('change.password');
 
 // Roles
