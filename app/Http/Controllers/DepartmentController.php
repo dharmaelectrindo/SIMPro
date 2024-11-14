@@ -71,7 +71,10 @@ class DepartmentController extends Controller
         }
 
         Department::updateOrCreate(['id' => $request->departmentID],
-                ['department_name' => $request->departmentName]);
+                [
+                    'department_name' => $request->departmentName,
+                    'user_id' => Auth::user()->id,
+                ]);
 
         //  return response
         return response()->json([

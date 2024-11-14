@@ -29,6 +29,7 @@ class RoleAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'delete role']);
 
         Permission::create(['name' => 'menu permission']);
+        Permission::create(['name' => 'create add-permission']);
         Permission::create(['name' => 'create permission']);
         Permission::create(['name' => 'edit permission']);
         Permission::create(['name' => 'delete permission']);
@@ -39,7 +40,7 @@ class RoleAndPermissionSeeder extends Seeder
             'name' => 'SUPER ADMIN',
             'username' => 'supermin',
             'password' => 'super123',
-            'email' => 'dikri.hakim@dem.dharmap.com',
+            'email' => 'apps.development@dem.dharmap.com',
             'picture' => 'supermin_avatar.png',
         ]);
 
