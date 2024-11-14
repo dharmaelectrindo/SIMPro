@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         Permission::create(['name' => 'user delete']);
 
         Permission::create(['name' => 'role menu']);
+        Permission::create(['name' => 'role add-permission']);
         Permission::create(['name' => 'role create']);
         Permission::create(['name' => 'role edit']);
         Permission::create(['name' => 'role delete']);
