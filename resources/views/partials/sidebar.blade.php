@@ -65,7 +65,7 @@
                             <a href="/employees">Employees</a>
                         </li>
                         <li>
-                            <a href="/department">Department</a>
+                            <a href="/departments">Departments</a>
                         </li>
                         <li>
                             <a href="/templates">Templates</a>

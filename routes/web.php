@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\DepartmentController;
 
 
 Auth::routes();
@@ -48,6 +49,10 @@ Route::resource('users', UserController::class)->middleware('auth');
 Route::get('/users', [UserController::class, 'users'])->name('users.users');
 Route::post('/users/delete', [UserController::class, 'delete'])->name('users.delete');
 Route::get('/getroles', [UserController::class, 'getRoles'])->name('users.getRoles');
+
+// Department
+Route::resource('departments', DepartmentController::class);
+Route::post('/permissions/delete', [DepartmentController::class, 'delete'])->name('departments.delete');
 
 
 

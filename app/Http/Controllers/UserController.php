@@ -17,7 +17,7 @@ use Spatie\Permission\Models\Role;
  
 class UserController extends Controller
 {
-    public function __construct()
+    public function __construct() 
     {
         $this->middleware('permission:user menu', ['only' => ['users']]);
         $this->middleware('permission:user create', ['only' => ['create','store','getRoles']]);

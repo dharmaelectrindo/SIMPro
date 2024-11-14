@@ -9,11 +9,11 @@
         <h3 class="page-title fw-semibold fs-18 mb-0">Role</h3>
         <div class="ms-md-1 ms-0">
             <nav>
-                @can('role create')
+                {{-- @can('role create') --}}
                     <div class="d-flex">
                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-wave waves-light waves-effect waves-light" id="create"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create New</a>                  
                     </div>
-                @endcan
+                {{-- @endcan --}}
                 {{-- <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="javascript:void(0);">Master Data</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Customers</li>
@@ -27,24 +27,19 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card custom-card">
-                {{-- <div class="card-header justify-content-between">
-                    <div class="card-title">Customers</div>               
-                </div> --}}
                 <div class="card-body">
-                    <div class="table-responsive mb-4">
-                        <table class="table text-nowrap table-bordered" id="roles">
-                            <thead>
-                                <tr>
-                                    <th width="50px">#</th>
-                                    <th>NAME</th>
-                                    {{-- <th>PERMISSION</th> --}}
-                                    <th width="107px">ACTIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+                    <table class="table table-responsive table-bordered" id="roles">
+                        <thead>
+                            <tr>
+                                <th width="40px">#</th>
+                                <th>NAME</th>
+                                {{-- <th>PERMISSION</th> --}}
+                                <th width="410px">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -72,7 +67,11 @@
                             <input type="hidden" name="roleID" id="roleID">
                             <label for="roleName" class="form-label">Role Name</label>
                             <input type="text" id="roleName" name="roleName" class="form-control" placeholder="Role Name">
-                        </div>                                                                                                                                                                                                                 --}}
+                        </div>
+                        {{-- <div class="col-xl-12">
+                            <label for="permissions" class="form-label">Permissions</label>
+                            <input type="text" id="permissions" name="permissions" class="form-control" placeholder="Permissions">
+                        </div>                                                                                                                                                                                                                        --}}
                     </div>
             </div>
             <div class="modal-footer">
@@ -84,8 +83,7 @@
     </div>
 </div>
 
-
-<!-- Modal Add Permissions -->
+<!-- Form Modal Add Permission-->
 <div class="modal fade" id="formModelPermission" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
@@ -114,14 +112,10 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <table class="table">
-                                    <thead>
-                                        <tr id="permissionsTableHeader">
-                                        </tr>
-                                    </thead>
-                                    <tbody id="permissionsContainer">
-                                    </tbody>
-                                </table>
+                                <div class="row" id="permissionsContainer">
+                                </div>
+                            </div>
+                            <div class="card-footer d-none border-top-0">
                             </div>
                         </div>
                     </div>
@@ -134,9 +128,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 @endsection
 
@@ -199,16 +190,21 @@
             url: '/roles/add-permission/' + id,
             method: 'GET',
             success: function(data) {
+                // Clear previous permissions if any
                 $('#permissionsContainer').empty();
+
+                // Open modal and reset form
                 $('.error-msg').hide();
                 $('#rolePermissionForm').trigger("reset");
                 $('#savePermissionBtn').val("add-permission");
                 $('.modal-title').html("Add Permission");
                 $('#formModelPermission').modal('show');
 
+                // Fill modal inputs with data
                 $('#rolePermissionID').val(data.role.id);
                 $('#rolePermissionName').val(data.role.name);
-
+                
+                // Iterate through permissions and append checkboxes
                 $.each(data.permissions, function(index, permission) {
                     var isChecked = $.inArray(permission.id, data.rolePermissions) !== -1 ? 'checked' : '';
                     var checkboxHtml = '<div class="col-lg-12">' +
@@ -222,11 +218,10 @@
             },
             error: function(xhr, status, error) {
                 console.error(error);
+                // Handle error if AJAX request fails
             }
         });
     });
-
-
 
 
     $('#saveBtn').click(function (e) {
@@ -265,6 +260,8 @@
             });
         }
     });
+
+
 
     $(document).on('click', '.delete', function (e) {
         e.preventDefault();
@@ -307,46 +304,79 @@
     });
 
 
-    
-    $('#savePermissionBtn').click(function (e) {
-        e.preventDefault();
-        var $button = $(this);
-        $button.html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Loading..');
+    $('body').on('click', '.add-permission', function () {
+        var roleId = $(this).data('id');
 
         $.ajax({
-            data: $('#addPermissionForm').serialize(),
-            url: "{{ route('roles.give-permission') }}",
-            type: "POST",
+            url: '/roles/add-permission/' + roleId,
+            method: 'GET',
             dataType: 'json',
-            success: function (data) {
-                if ($.isEmptyObject(data.error)) {
-                    Swal.fire("Done!", data.message, "success");
-                    $('.error-msg').hide();
-                    $('#formModelPermission').modal('hide');
-                    $button.html('Save');
-                    table.draw(); // Refresh table
-                } else {
-                    printErrorMsg(data.error);
-                    $button.html('Save');
-                }
+            success: function (response) {
+                $('#permissionsContainer').empty(); // Clear previous permissions if any
+                $('.error-msg').hide();
+                $('#rolePermissionForm').trigger("reset");
+                $('#savePermissionBtn').val("add-permission");
+                $('.modal-title').html("Add Permission");
+                $('#formModelPermission').modal('show');
+                $('#rolePermissionID').val(response.role.id);
+                $('#rolePermissionName').val(response.role.name);
+
+                // Iterate through permissions and append checkboxes
+                $.each(response.permissions, function(index, permission) {
+                    var isChecked = $.inArray(permission.id, response.rolePermissions) !== -1 ? 'checked' : '';
+                    var checkboxHtml = '<div class="col-md-6 col-lg-4">' +
+                        '<div class="form-check form-check-md form-switch mb-2">' +
+                        '<input class="form-check-input" type="checkbox" role="switch" name="permissions[]" value="' + permission.name + '" ' + isChecked + '>' +
+                        '<label class="form-check-label" for="switch-primary-' + index + '">' + permission.name + '</label>' +
+                        '</div>' +
+                        '</div>';
+                    $('#permissionsContainer').append(checkboxHtml);
+                });
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error(error);
-                $button.html('Save');
+                // Handle error if AJAX request fails
             }
         });
     });
 
-    function printErrorMsg(msg) {
-        $('.error-msg').find('ul').html('');
-        $('.error-msg').css('display', 'block');
-        $.each(msg, function (key, value) {
-            $(".error-msg").find("ul").append('<li>' + value + '</li>');
-        });
-    }
 
+    $('#savePermissionBtn').click(function (e) {
+    e.preventDefault();
+    var $button = $(this);
+    $button.html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Loading..');
 
-    
+    $.ajax({
+        data: $('#addPermissionForm').serialize(),
+        url: "{{ route('roles.give-permission') }}",
+        type: "POST",
+        dataType: 'json',
+        success: function (data) {
+            if ($.isEmptyObject(data.error)) {
+                Swal.fire("Done!", data.message, "success");
+                $('.error-msg').hide();
+                $('#formModelPermission').modal('hide');
+                $button.html('Save');
+                table.draw(); // Refresh table if needed
+            } else {
+                printErrorMsg(data.error);
+                $button.html('Save');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(error);
+            $button.html('Save');
+        }
+    });
+});
+
+function printErrorMsg(msg) {
+    $('.error-msg').find('ul').html('');
+    $('.error-msg').css('display', 'block');
+    $.each(msg, function (key, value) {
+        $(".error-msg").find("ul").append('<li>' + value + '</li>');
+    });
+}
 
 
 

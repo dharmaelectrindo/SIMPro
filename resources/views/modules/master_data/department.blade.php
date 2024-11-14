@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-
+ 
 
 
 <div class="container-fluid"> 
 
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-        <h3 class="page-title fw-semibold fs-18">Department</h3>
+        <h3 class="page-title fw-semibold fs-18">Departments</h3>
         <div class="ms-md-1 ms-0">
             <nav>
-                @can('department create')
+                @can('departments create')
                     <div class="d-flex">
                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-wave waves-light waves-effect waves-light" id="create"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create New</a>                  
                     </div>
@@ -30,7 +30,7 @@
                         <thead>
                             <tr>
                                 <th width="40px">#</th>
-                                <th>DESCRIPTION</th>
+                                <th>DEPARTMENT NAME</th>
                                 <th class="text-center" width="185px">ACTIONS</th>
                             </tr>
                         </thead>
@@ -62,8 +62,8 @@
                     <div class="row gy-2">
                         <div class="col-xl-12">
                             <input type="hidden" name="departmentID" id="departmentID">
-                            <label for="description" class="form-label">Description</label>
-                            <input type="text" id="description" name="description" class="form-control" placeholder="Description">
+                            <label for="departmentName" class="form-label">Department Name</label>
+                            <input type="text" id="departmentName" name="departmentName" class="form-control" placeholder="Department Name">
                         </div>                                                                                                                                                                                                      
                     </div>
             </div>
@@ -92,10 +92,10 @@ $(document).ready(function (){
     var table = $('#department').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('department.index') }}",
+        ajax: "{{ route('departments.index') }}",
         columns: [
                 {data: 'DT_RowIndex',name: 'DT_Row_Index',orderable: false,searchable: false},
-                {data: 'description'},
+                {data: 'department_name'},
                 {data: 'action',orderable: false,searchable: false},
             ],
         dom: "<'row'<'col-md-2'l><'col-md-3'B><'col-md-7'f>>" +
@@ -112,7 +112,7 @@ $(document).ready(function (){
     $('#create').click(function () {
         $('#saveBtn').val("create"); 
         $('#departmentID').val('');
-        $('#description').val('');
+        $('#departmentName').val('');
         $('.error-msg').hide();
         $('#departmentForm').trigger("reset");
         $('.modal-title').html("Create");
@@ -122,14 +122,14 @@ $(document).ready(function (){
 
     $('body').on('click', '.edit', function () {
         var id = $(this).data('id');
-        $.get("{{ route('department.index') }}" + '/' + id + '/edit', function (data) {
+        $.get("{{ route('departments.index') }}" + '/' + id + '/edit', function (data) {
             $('.error-msg').hide();
             $('#departmentForm').trigger("reset");
             $('#saveBtn').val("edit");
             $('.modal-title').html("Edit");
             $('#formModel').modal('show');
             $('#departmentID').val(data.id);
-            $('#description').val(data.description);
+            $('#departmentName').val(data.department_name);
         });
     });
 
@@ -140,7 +140,7 @@ $(document).ready(function (){
 
         $.ajax({
             data: $('#departmentForm').serialize(),
-            url: "{{ route('department.store') }}",
+            url: "{{ route('departments.store') }}",
             type: "POST",
             dataType: 'json',
             success: function (data) {
@@ -187,7 +187,7 @@ $(document).ready(function (){
             if (result.isConfirmed) {
                 $.ajax({
                 type: "POST",
-                url: "/department/delete",
+                url: "/departments/delete",
                 data: {id:id},
                     success: function (data) {
                         Swal.fire('Data berhasil di hapus', '', 'success');

@@ -9,11 +9,11 @@
         <h3 class="page-title fw-semibold fs-18 mb-0">Permission</h3>
         <div class="ms-md-1 ms-0">
             <nav>
-                @can('permission create')
+                {{-- @can('permission create') --}}
                     <div class="d-flex">
                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-wave waves-light waves-effect waves-light" id="create"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create New</a>                  
                     </div>
-                @endcan
+                {{-- @endcan --}}
                 {{-- <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="javascript:void(0);">Master Data</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Customers</li>
@@ -27,24 +27,19 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card custom-card">
-                {{-- <div class="card-header justify-content-between">
-                    <div class="card-title">Customers</div>               
-                </div> --}}
                 <div class="card-body">
-                    <div class="table-responsive mb-4">
-                        <table class="table text-nowrap table-bordered" id="permission">
-                            <thead>
-                                <tr>
-                                    <th width="25">#</th>
-                                    <th scope="col">PERMISSION NAME</th>
-                                    <th scope="col">CREATED AT</th>
-                                    <th width="150">ACTIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+                    <table class="table table-responsive table-bordered" id="permission">
+                        <thead>
+                            <tr>
+                                <th width="40">#</th>
+                                <th>PERMISSION NAME</th>
+                                <th>CREATED AT</th>
+                                <th width="185">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -88,7 +83,7 @@
 
 @section('scripts')
 
-<!-- CRUD Permission -->
+<!-- CRUD Customers -->
 <script>
     $(document).ready(function () {
         $.ajaxSetup({
