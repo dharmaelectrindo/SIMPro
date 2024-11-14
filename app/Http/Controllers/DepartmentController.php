@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Department;
+use Spatie\Permission\Models\Permission;
+use App\Models\Department;
 use DataTables;
 use Illuminate\Support\Facades\Validator; 
 use Illuminate\Support\Facades\Auth;
