@@ -15,6 +15,8 @@ class HomeController extends Controller
     
     public function index()
     {
-        return view('modules.home.home');
+        return view('modules.home.home', [
+            'title' => 'SIMPro - Home',
+        ]);
     }
 }

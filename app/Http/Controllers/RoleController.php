@@ -91,13 +91,21 @@ class RoleController extends Controller
         return response()->json($data);
     }
 
+    public function destroy($id)
+    {
+        $roles = Role::findOrFail($id); 
+        $roles->delete();
+        
+        return response()->json(['success' => true, 'message' => 'Department deleted successfully.']);
+    }
+
     
 
-    public function delete(Request $request)
-    {
-        Role::find($request->id)->delete();
-        return redirect()->back();
-    }
+    // public function delete(Request $request)
+    // {
+    //     Role::find($request->id)->delete();
+    //     return redirect()->back();
+    // }
 
 
     // public function addPermissionToRole($id)

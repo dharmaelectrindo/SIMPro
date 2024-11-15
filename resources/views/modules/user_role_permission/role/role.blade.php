@@ -9,11 +9,11 @@
         <h3 class="page-title fw-semibold fs-18 mb-0">Role</h3>
         <div class="ms-md-1 ms-0">
             <nav>
-                {{-- @can('role create') --}}
+                @can('role create')
                     <div class="d-flex">
                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-wave waves-light waves-effect waves-light" id="create"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create New</a>                  
                     </div>
-                {{-- @endcan --}}
+                @endcan
                 {{-- <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="javascript:void(0);">Master Data</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Customers</li>
@@ -33,7 +33,6 @@
                             <tr>
                                 <th width="40px">#</th>
                                 <th>NAME</th>
-                                {{-- <th>PERMISSION</th> --}}
                                 <th width="410px">ACTIONS</th>
                             </tr>
                         </thead>
@@ -67,11 +66,7 @@
                             <input type="hidden" name="roleID" id="roleID">
                             <label for="roleName" class="form-label">Role Name</label>
                             <input type="text" id="roleName" name="roleName" class="form-control" placeholder="Role Name">
-                        </div>
-                        {{-- <div class="col-xl-12">
-                            <label for="permissions" class="form-label">Permissions</label>
-                            <input type="text" id="permissions" name="permissions" class="form-control" placeholder="Permissions">
-                        </div>                                                                                                                                                                                                                        --}}
+                        </div>                                                                                                                                                                                                                      --}}
                     </div>
             </div>
             <div class="modal-footer">
@@ -133,14 +128,14 @@
 
 @section('scripts')
 
-<!-- CRUD Role -->
+<!-- CRUD Roles -->
 <script>
     $(document).ready(function () {
         $.ajaxSetup({
-        headers:{
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
+            headers:{
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
     var table = $('#roles').DataTable({
         processing: true,
@@ -190,7 +185,7 @@
             url: '/roles/add-permission/' + id,
             method: 'GET',
             success: function(data) {
-                // Clear previous permissions if any
+                // Clear previous permissions
                 $('#permissionsContainer').empty();
 
                 // Open modal and reset form
@@ -200,11 +195,9 @@
                 $('.modal-title').html("Add Permission");
                 $('#formModelPermission').modal('show');
 
-                // Fill modal inputs with data
                 $('#rolePermissionID').val(data.role.id);
                 $('#rolePermissionName').val(data.role.name);
                 
-                // Iterate through permissions and append checkboxes
                 $.each(data.permissions, function(index, permission) {
                     var isChecked = $.inArray(permission.id, data.rolePermissions) !== -1 ? 'checked' : '';
                     var checkboxHtml = '<div class="col-lg-12">' +
@@ -218,7 +211,6 @@
             },
             error: function(xhr, status, error) {
                 console.error(error);
-                // Handle error if AJAX request fails
             }
         });
     });
@@ -262,46 +254,40 @@
     });
 
 
-
     $(document).on('click', '.delete', function (e) {
         e.preventDefault();
         var id = $(this).data('id');
+        
         Swal.fire({
-                title: 'Delete',
-                text: 'Apakah anda yakin ingin menghapus data ini?',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-                icon: 'question',
-            }).then((result) => {
-
+            title: 'Delete',
+            text: 'Apakah anda yakin ingin menghapus data ini?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            icon: 'question',
+        }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                type: "POST",
-                url: "/roles/delete",
-                data: {id:id},
+                    type: "DELETE", 
+                    url: "/roles/" + id, 
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content') 
+                    },
                     success: function (data) {
                         Swal.fire('Data berhasil di hapus', '', 'success');
-                        table.draw();
+                        table.draw(); 
                     },
                     error: function (data) {
                         console.log('Error:', data);
                         Swal.fire('Data gagal di hapus', '', 'error');
-                        table.draw();
+                        table.draw(); 
                     }
                 });
             }
-
-            function printErrorMsg(msg) {
-                $('.error-msg').find('ul').html('');
-                $('.error-msg').css('display','block');
-                $.each( msg, function( key, value ) {
-                    $(".error-msg").find("ul").append('<li>'+value+'</li>');
-                });
-            }
-
         });
     });
+
+
 
 
     $('body').on('click', '.add-permission', function () {
@@ -312,7 +298,7 @@
             method: 'GET',
             dataType: 'json',
             success: function (response) {
-                $('#permissionsContainer').empty(); // Clear previous permissions if any
+                $('#permissionsContainer').empty(); // Clear
                 $('.error-msg').hide();
                 $('#rolePermissionForm').trigger("reset");
                 $('#savePermissionBtn').val("add-permission");
@@ -321,7 +307,6 @@
                 $('#rolePermissionID').val(response.role.id);
                 $('#rolePermissionName').val(response.role.name);
 
-                // Iterate through permissions and append checkboxes
                 $.each(response.permissions, function(index, permission) {
                     var isChecked = $.inArray(permission.id, response.rolePermissions) !== -1 ? 'checked' : '';
                     var checkboxHtml = '<div class="col-md-6 col-lg-4">' +
@@ -335,48 +320,48 @@
             },
             error: function(xhr, status, error) {
                 console.error(error);
-                // Handle error if AJAX request fails
             }
         });
     });
 
 
     $('#savePermissionBtn').click(function (e) {
-    e.preventDefault();
-    var $button = $(this);
-    $button.html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Loading..');
+        e.preventDefault();
+        var $button = $(this);
+        $button.html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Loading..');
 
-    $.ajax({
-        data: $('#addPermissionForm').serialize(),
-        url: "{{ route('roles.give-permission') }}",
-        type: "POST",
-        dataType: 'json',
-        success: function (data) {
-            if ($.isEmptyObject(data.error)) {
-                Swal.fire("Done!", data.message, "success");
-                $('.error-msg').hide();
-                $('#formModelPermission').modal('hide');
-                $button.html('Save');
-                table.draw(); // Refresh table if needed
-            } else {
-                printErrorMsg(data.error);
+        $.ajax({
+            data: $('#addPermissionForm').serialize(),
+            url: "{{ route('roles.give-permission') }}",
+            type: "POST",
+            dataType: 'json',
+            success: function (data) {
+                if ($.isEmptyObject(data.error)) {
+                    Swal.fire("Done!", data.message, "success");
+                    $('.error-msg').hide();
+                    $('#formModelPermission').modal('hide');
+                    $button.html('Save');
+                    table.draw(); // Refresh table
+                } else {
+                    printErrorMsg(data.error);
+                    $button.html('Save');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
                 $button.html('Save');
             }
-        },
-        error: function (xhr, status, error) {
-            console.error(error);
-            $button.html('Save');
-        }
+        });
     });
-});
 
-function printErrorMsg(msg) {
-    $('.error-msg').find('ul').html('');
-    $('.error-msg').css('display', 'block');
-    $.each(msg, function (key, value) {
-        $(".error-msg").find("ul").append('<li>' + value + '</li>');
-    });
-}
+    // Function error message
+    function printErrorMsg(msg) {
+        $('.error-msg').find('ul').html('');
+        $('.error-msg').css('display', 'block');
+        $.each(msg, function (key, value) {
+            $(".error-msg").find("ul").append('<li>' + value + '</li>');
+        });
+    }
 
 
 
