@@ -101,43 +101,6 @@ class RoleController extends Controller
 
     
 
-    // public function delete(Request $request)
-    // {
-    //     Role::find($request->id)->delete();
-    //     return redirect()->back();
-    // }
-
-
-    // public function addPermissionToRole($id)
-    // {
-    //     $permissions = Permission::get();
-    //     $role = Role::find($id);
-    //     $rolePermissions = DB::table('role_has_permissions')
-    //                             ->where('role_has_permissions.role_id', $role->id)
-    //                             ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
-    //                             ->all();
-
-    //     return response()->json($role,$permission,$rolePermissions);
-    // }
-
-    // public function addPermissionToRole($id)
-    // {
-    //     $role = Role::find($id);
-    //     $permissions = Permission::get();
-    //     $rolePermissions = DB::table('role_has_permissions')
-    //         ->where('role_has_permissions.role_id', $role->id)
-    //         ->pluck('role_has_permissions.permission_id')
-    //         ->all();
-
-    //     $data = [
-    //         'role' => $role,
-    //         'permissions' => $permissions,
-    //         'rolePermissions' => $rolePermissions
-    //     ];
-
-    //     return response()->json($data);
-    // }
-
     public function addPermissionToRole($id)
     {
         $role = Role::findOrFail($id);
@@ -171,13 +134,6 @@ class RoleController extends Controller
         // }
     }
 
-
-    // public function givePermissionToRole(Request $request)
-    // {
-    //     $role = Role::findOrFail($request->id);
-    //     $role->syncPermissions($request->permission);
-    //     return redirect()->back();
-    // }
 
     public function show($id)
     {
