@@ -18,6 +18,7 @@ class RoleController extends Controller
         $this->middleware('permission:role create', ['only' => ['create','store','addPermissionToRole','givePermissionToRole']]);
         $this->middleware('permission:role edit', ['only' => ['edit']]);
         $this->middleware('permission:role delete', ['only' => ['delete']]);
+        $this->middleware('permission:role add-permission', ['only' => ['add-permission']]);
     }
 
     public function index(Request $request)
@@ -28,13 +29,13 @@ class RoleController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn = '';                 
-                        //if (Auth::user()->can('role add-permission')) {
+                        if (Auth::user()->can('roles add-permission')) {
                             $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" data-toggle="tooltip" data-original-title="Add Permission" class="btn btn-sm btn-success add-permission"><i class="ri-key-line fw-semibold align-middle me-1"></i> Add/Update Permission </a>';
-                        //}
-                        if (Auth::user()->can('role edit')) {
+                        }
+                        if (Auth::user()->can('roles edit')) {
                             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> Edit </a>';
                         }
-                        if (Auth::user()->can('role delete')) {
+                        if (Auth::user()->can('roles delete')) {
                             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i> Delete </a>';
                         }
                         return $btn;

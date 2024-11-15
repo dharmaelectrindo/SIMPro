@@ -20,21 +20,21 @@ class DatabaseSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['name' => 'user menu']);
-        Permission::create(['name' => 'user create']);
-        Permission::create(['name' => 'user edit']);
-        Permission::create(['name' => 'user delete']);
+        Permission::create(['name' => 'users menu']);
+        Permission::create(['name' => 'users create']);
+        Permission::create(['name' => 'users edit']);
+        Permission::create(['name' => 'users delete']);
 
-        Permission::create(['name' => 'role menu']);
-        Permission::create(['name' => 'role add-permission']);
-        Permission::create(['name' => 'role create']);
-        Permission::create(['name' => 'role edit']);
-        Permission::create(['name' => 'role delete']);
+        Permission::create(['name' => 'roles menu']);
+        Permission::create(['name' => 'roles add-permission']);
+        Permission::create(['name' => 'roles create']);
+        Permission::create(['name' => 'roles edit']);
+        Permission::create(['name' => 'roles delete']);
 
-        Permission::create(['name' => 'permission menu']);
-        Permission::create(['name' => 'permission create']);
-        Permission::create(['name' => 'permission edit']);
-        Permission::create(['name' => 'permission delete']);
+        Permission::create(['name' => 'permissions menu']);
+        Permission::create(['name' => 'permissions create']);
+        Permission::create(['name' => 'permissions edit']);
+        Permission::create(['name' => 'permissions delete']);
 
         // create roles and assign created permissions
         $role = Role::create(['name' => 'Administrator']);

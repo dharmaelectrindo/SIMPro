@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\EmployeeController;
 
 
 Auth::routes();
@@ -41,7 +42,6 @@ Route::post('/roles/give-permission', [RoleController::class, 'givePermissionToR
 
 // Permission
 Route::resource('permissions', PermissionController::class);
-Route::post('/permissions/delete', [PermissionController::class, 'delete'])->name('permissions.delete');
 
 // User
 Route::resource('users', UserController::class)->middleware('auth');
@@ -49,8 +49,12 @@ Route::get('/users', [UserController::class, 'users'])->name('users.users');
 Route::post('/users/delete', [UserController::class, 'delete'])->name('users.delete');
 Route::get('/getroles', [UserController::class, 'getRoles'])->name('users.getRoles');
 
-// Department
+// Organization
 Route::resource('organizations', OrganizationController::class);
+
+//Employees
+Route::resource('employees', EmployeeController::class)->middleware('auth');
+
 
 
 

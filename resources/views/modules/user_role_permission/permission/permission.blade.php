@@ -9,11 +9,11 @@
         <h3 class="page-title fw-semibold fs-18 mb-0">Permission</h3>
         <div class="ms-md-1 ms-0">
             <nav>
-                {{-- @can('permission create') --}}
+                @can('permissions create')
                     <div class="d-flex">
                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-wave waves-light waves-effect waves-light" id="create"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create New</a>                  
                     </div>
-                {{-- @endcan --}}
+                @endcan
                 {{-- <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="javascript:void(0);">Master Data</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Customers</li>
@@ -85,12 +85,13 @@
 
 <!-- CRUD Customers -->
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
         $.ajaxSetup({
-        headers:{
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
+            headers:{
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
     var table = $('#permission').DataTable({
         processing: true,
         serverSide: true,
@@ -173,45 +174,40 @@
 
 
 
+   
     $(document).on('click', '.delete', function (e) {
         e.preventDefault();
         var id = $(this).data('id');
+        
         Swal.fire({
-                title: 'Delete',
-                text: 'Apakah anda yakin ingin menghapus data ini?',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-                icon: 'question',
-            }).then((result) => {
-
+            title: 'Delete',
+            text: 'Apakah anda yakin ingin menghapus data ini?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            icon: 'question',
+        }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                type: "POST",
-                url: "/permissions/delete",
-                data: {id:id},
+                    type: "DELETE", 
+                    url: "/permissions/" + id, 
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content') 
+                    },
                     success: function (data) {
                         Swal.fire('Data berhasil di hapus', '', 'success');
-                        table.draw();
+                        table.draw(); 
                     },
                     error: function (data) {
                         console.log('Error:', data);
                         Swal.fire('Data gagal di hapus', '', 'error');
-                        table.draw();
+                        table.draw(); 
                     }
                 });
             }
-
-            function printErrorMsg(msg) {
-                $('.error-msg').find('ul').html('');
-                $('.error-msg').css('display','block');
-                $.each( msg, function( key, value ) {
-                    $(".error-msg").find("ul").append('<li>'+value+'</li>');
-                });
-            }
-
         });
     });
+
 
 
 

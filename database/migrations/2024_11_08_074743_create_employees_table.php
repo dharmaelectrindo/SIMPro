@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('npk')->unique();
             $table->string('employee_name', 100);
             $table->string('email')->unique();
-            $table->string('department_id');
             $table->string('employee_position', 50);
             $table->string('mobile_number', 15);
             $table->timestamps();
