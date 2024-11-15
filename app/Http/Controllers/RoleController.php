@@ -28,9 +28,9 @@ class RoleController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn = '';                 
-                        if (Auth::user()->can('role add-permission')) {
+                        //if (Auth::user()->can('role add-permission')) {
                             $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" data-toggle="tooltip" data-original-title="Add Permission" class="btn btn-sm btn-success add-permission"><i class="ri-key-line fw-semibold align-middle me-1"></i> Add/Update Permission </a>';
-                        }
+                        //}
                         if (Auth::user()->can('role edit')) {
                             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> Edit </a>';
                         }
@@ -96,7 +96,7 @@ class RoleController extends Controller
         $roles = Role::findOrFail($id); 
         $roles->delete();
         
-        return response()->json(['success' => true, 'message' => 'Department deleted successfully.']);
+        return response()->json(['success' => true, 'message' => 'Role deleted successfully.']);
     }
 
     

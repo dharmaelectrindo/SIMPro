@@ -56,13 +56,12 @@ class OrganizationController extends Controller
 
         // validasi
         $validator = Validator::make($request->all(), [
-            'organizationsCode' => 'required|unique:organizations',
+            'organizationsCode' => 'required',
             'description' => 'required|max:100',
             'organizationsLevel' => 'required',
         ],
         [
             'organizationsCode.required' => 'Please Entry Code',
-            'organizationsCode.unique' => 'Code Already.',
             'description.required' => 'Please Entry Description',
         ],
             
@@ -72,11 +71,11 @@ class OrganizationController extends Controller
             return response()->json(['error'=>$validator->errors()->all()]);
         }
 
-        Department::updateOrCreate(['id' => $request->organizationsID],
+        Organization::updateOrCreate(['id' => $request->organizationsID],
                 [
                     'organizations_code' => $request->organizationsCode,
                     'organizations_level' => $request->organizationsLevel,
-                    'odescriptions' => $request->descriptions,
+                    'odescription' => $request->descriptions,
                     'usrmdf' => Auth::user()->id,
                 ]);
 
@@ -97,10 +96,10 @@ class OrganizationController extends Controller
 
     
 
-    public function delete(Request $request)
+    public function destroy(Request $request)
     {
-        Department::find($request->id)->delete();
-        return redirect()->back();
+        Organization::find($request->id)->delete();
+        return response()->json(['success' => true, 'message' => 'Role deleted successfully.']);
     }
 
 

@@ -11,7 +11,7 @@
         <h3 class="page-title fw-semibold fs-18">Organization</h3>
         <div class="ms-md-1 ms-0">
             <nav>
-                @can('departments create')
+                @can('organizations create')
                     <div class="d-flex">
                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-wave waves-light waves-effect waves-light" id="create"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create New</a>                  
                     </div>
@@ -72,6 +72,7 @@
                             <label for="organizationsName" class="form-label">Level</label>
                             <select id="organizationsLevel" name="organizationsLevel" class="form-control">
                                 <option value=""> Choose Level </option> 
+                                <option value="CEO"> CEO </option>
                                 <option value="Divisi"> Divisi </option>
                                 <option value="Department"> Department </option>
                         </div>                                                                                                                                                                                                      
@@ -100,6 +101,7 @@
 <!-- CRUD User -->
 <script>
 $(document).ready(function (){
+    // $("#organizationsLevel").select2();
     $.ajaxSetup({
         headers:{
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

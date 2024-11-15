@@ -5,7 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\OrganizationController;
 
 
 Auth::routes();
@@ -51,8 +51,7 @@ Route::post('/users/delete', [UserController::class, 'delete'])->name('users.del
 Route::get('/getroles', [UserController::class, 'getRoles'])->name('users.getRoles');
 
 // Department
-Route::resource('departments', DepartmentController::class);
-Route::post('/departments/delete', [DepartmentController::class, 'delete'])->name('departments.delete');
+Route::resource('organizations', OrganizationController::class);
 
 
 

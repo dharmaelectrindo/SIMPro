@@ -10,6 +10,7 @@ class Organization extends Model
     use SoftDeletes;
 
     protected $primary = ['id'];
+    protected $dates = ['deleted_at'];
     protected $fillable = [
         'organizations_code',
         'organizations_level',
