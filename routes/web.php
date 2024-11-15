@@ -52,7 +52,7 @@ Route::get('/getroles', [UserController::class, 'getRoles'])->name('users.getRol
 
 // Department
 Route::resource('departments', DepartmentController::class);
-Route::post('/permissions/delete', [DepartmentController::class, 'delete'])->name('departments.delete');
+Route::post('/departments/delete', [DepartmentController::class, 'delete'])->name('departments.delete');
 
 
 

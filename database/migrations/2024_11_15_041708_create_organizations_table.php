@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table) {
+        Schema::create('organizations', function (Blueprint $table) {
             $table->id();
-            $table->string("department_category",10);
-            $table->string("department_name",100);
-            $table->integer("user_id");
+            $table->string("organizations_code",8);
+            $table->string("organizations_level",10);
+            $table->string("description",100);
+            $table->unsignedBigInteger("usrmdf");
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('usrmdf')->references('id')->on('users');
         });
+        
     }
 
     /**
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('organizations');
     }
 };

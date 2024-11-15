@@ -30,7 +30,8 @@
                         <thead>
                             <tr>
                                 <th width="40px">#</th>
-                                <th>DEPARTMENT NAME</th>
+                                <th>CATEGORY</th>
+                                <th>DESCRIPTION</th>
                                 <th class="text-center" width="185px">ACTIONS</th>
                             </tr>
                         </thead>
@@ -61,8 +62,17 @@
                     </div>
                     <div class="row gy-2">
                         <div class="col-xl-12">
+                            <label for="departmentName" class="form-label">Category</label>
+                            <select id="departmentCategory" name="departmentCategory" class="form-control">
+                                <option value=""> Pilih Category Unit </option> 
+                                <option value="Divisi"> Divisi </option>
+                                <option value="Department"> Department </option>
+                        </div>                                                                                                                                                                                                      
+                    </div>
+                    <div class="row gy-2">
+                        <div class="col-xl-12">
                             <input type="hidden" name="departmentID" id="departmentID">
-                            <label for="departmentName" class="form-label">Department Name</label>
+                            <label for="departmentName" class="form-label">Unit Name</label>
                             <input type="text" id="departmentName" name="departmentName" class="form-control" placeholder="Department Name">
                         </div>                                                                                                                                                                                                      
                     </div>
@@ -95,6 +105,7 @@ $(document).ready(function (){
         ajax: "{{ route('departments.index') }}",
         columns: [
                 {data: 'DT_RowIndex',name: 'DT_Row_Index',orderable: false,searchable: false},
+                {data: 'department_category'},
                 {data: 'department_name'},
                 {data: 'action',orderable: false,searchable: false},
             ],
@@ -130,6 +141,7 @@ $(document).ready(function (){
             $('#formModel').modal('show');
             $('#departmentID').val(data.id);
             $('#departmentName').val(data.department_name);
+            $('#departmentCategory').val(data.department_category).trigger("change");
         });
     });
 
