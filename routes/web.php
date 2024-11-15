@@ -36,7 +36,6 @@ Route::post('change-password', [UserController::class, 'change_password'])->name
 
 // Roles
 Route::resource('roles', RoleController::class)->middleware('auth');
-Route::post('/roles/delete', [RoleController::class, 'delete'])->name('roles.delete');
 Route::get('/roles/add-permission/{roles}', [RoleController::class, 'addPermissionToRole'])->name('roles.add-permission');
 Route::post('/roles/give-permission', [RoleController::class, 'givePermissionToRole'])->name('roles.give-permission');
 

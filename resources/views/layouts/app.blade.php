@@ -11,6 +11,16 @@
 
     <!-- App favicon -->
     <link rel="shortcut icon" href={{ asset('favicon.ico') }}>
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" type="text/css" href={{ asset('sweetalert2/sweetalert2.min.css') }}>
+
+    <!-- Select2 css -->
+    <link href={{ asset('hyper/dist/saas/assets/vendor/select2/css/select2.min.css') }} rel="stylesheet" type="text/css" />
+
+    <!-- DateRangePicker css -->
+    <link rel="stylesheet" href="hyper/dist/saas/assets/vendor/daterangepicker/daterangepicker.css">
+
     <!-- Theme Config Js -->
     <script src={{ asset('hyper/dist/saas/assets/js/hyper-config.js') }}></script>
     <!-- App css -->
@@ -18,19 +28,11 @@
     <!-- Icons css -->
     <link href={{ asset('hyper/dist/saas/assets/css/icons.min.css') }} rel="stylesheet" type="text/css" />
 
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" type="text/css" href={{ asset('sweetalert2/sweetalert2.min.css') }}>
-
     <!-- Datatables css -->
     <link rel="stylesheet" type="text/css" href={{ asset('hyper/dist/saas/assets/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}>
     <link rel="stylesheet" type="text/css" href={{ asset('hyper/dist/saas/assets/vendor/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}>
     <link rel="stylesheet" type="text/css" href={{ asset('hyper/dist/saas/assets/vendor/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}>
     <link rel="stylesheet" type="text/css" href={{ asset('hyper/dist/saas/assets/vendor/datatables.net-select-bs5/css/select.bootstrap5.min.css') }}>
-
-    <!-- jquery-ui css -->
-    <link rel="stylesheet" href={{ asset('hyper/dist/saas/assets/vendor/jquery-ui/themes/base/jquery-ui.min.css') }}>
-
-    <link rel="stylesheet" href="hyper/dist/saas/assets/vendor/daterangepicker/daterangepicker.css">
 
     <!-- font css -->
     <link rel="stylesheet" href={{ asset('style.css') }}>
@@ -728,11 +730,16 @@
 
     <!-- bundle -->
     <script src={{ asset('hyper/dist/saas/assets/js/vendor.min.js') }}></script>
-    <script src={{ asset('hyper/dist/saas/assets/js/app.min.js') }}></script>
-
+    
+    <!--  Sweetalert Js -->
     <script src={{ asset('sweetalert2/sweetalert2.all.min.js') }}></script>
-    <script src={{  asset('hyper/dist/saas/assets/vendor/jquery/jquery.min.js') }}></script>
-    <script src={{ asset('hyper/dist/saas/assets/vendor/jquery-ui/jquery-ui.min.js') }}></script>
+
+    <!--  Select2 Js -->
+    <script src={{ asset('hyper/dist/saas/assets/vendor/select2/js/select2.min.js') }}></script>
+
+    <!-- Typehead Plugin js -->
+    <script src={{ asset('hyper/dist/saas/assets/vendor/handlebars/handlebars.min.js') }}></script>
+    <script src={{ asset('hyper/dist/saas/assets/vendor/typeahead.js/typeahead.bundle.min.js') }}></script>
 
     <!-- Datatables js -->
     <script src={{  asset('hyper/dist/saas/assets/vendor/datatables.net/js/jquery.dataTables.min.js') }}></script>
@@ -753,6 +760,11 @@
 
     <script src="hyper/dist/saas/assets/vendor/daterangepicker/moment.min.js"></script>
     <script src="hyper/dist/saas/assets/vendor/daterangepicker/daterangepicker.js"></script>
+
+    <!-- ChartJs -->
+    <script src={{  asset('hyper/dist/saas/assets/vendor/chart.js/chart.min.js') }}></script>
+
+    <script src={{ asset('hyper/dist/saas/assets/js/app.min.js') }}></script>
 
 
     @yield("scripts")
