@@ -47,7 +47,7 @@ class DepartmentController extends Controller
                 
 
             return view('modules.master_data.department', [
-                'title' => 'Departments',
+                'title' => 'SIMPro - Permission',
             ]);
     }
 

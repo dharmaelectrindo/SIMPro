@@ -50,8 +50,7 @@ class RoleController extends Controller
                 
 
             return view('modules.user_role_permission.role.role', [
-                'title' => 'Roles',
-                // 'permissions' => Permission::all(),
+                'title' => 'SIMPro - Roles',
             ]);
     }
 

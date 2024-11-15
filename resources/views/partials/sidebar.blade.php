@@ -94,13 +94,13 @@
                 <div class="collapse" id="sidebarUserManagement">
                     <ul class="side-nav-second-level">
                         <li>
-                            <a href="/users">User</a>
+                            <a href="/users">Users</a>
                         </li>
                         <li>
-                            <a href="/roles">Role</a>
+                            <a href="/roles">Roles</a>
                         </li>
                         <li>
-                            <a href="/permissions">Permission</a>
+                            <a href="/permissions">Permissions</a>
                         </li>
                     </ul>
                 </div>

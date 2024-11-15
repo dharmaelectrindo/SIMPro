@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>DEM - SKILL MATRIX</title>
+    <title>{{$title}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="DEM - SKILL MATRIX" name="description">
     <meta content="Dikri" name="author">

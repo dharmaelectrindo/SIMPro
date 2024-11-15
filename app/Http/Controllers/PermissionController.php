@@ -44,7 +44,9 @@ class PermissionController extends Controller
                     ->make(true);
                 }
 
-            return view('modules.user_role_permission.permission.permission');
+                return view('modules.user_role_permission.permission.permission', [
+                    'title' => 'SIMPro - Permissions',
+                ]);
     }
 
 

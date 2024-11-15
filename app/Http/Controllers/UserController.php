@@ -141,7 +141,7 @@ class UserController extends Controller
         }
 
         return view('modules.user_role_permission.user.user', [
-            'title' => 'Users',
+            'title' => 'SIMPrp - Users',
             // 'roles' => Role::all(),
         ]);
     }
@@ -328,14 +328,14 @@ class UserController extends Controller
         // Delete the user
         $user->delete();
 
-        // Redirect back with a success message
+        // Redirect success
         return redirect()->back()->with('success', 'User deleted successfully.');
     }
 
 
     public function getRoles(Request $request)
     {
-        $roles = Role::all(); // Fetch all roles
+        $roles = Role::all();
         return response()->json($roles);
     }
 

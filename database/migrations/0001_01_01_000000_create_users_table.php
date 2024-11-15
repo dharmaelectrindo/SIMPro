@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('username');
             $table->string('password');
             $table->string('picture');
+            $table->foreignId('organization_id');
             $table->rememberToken();
             $table->timestamps();
         });

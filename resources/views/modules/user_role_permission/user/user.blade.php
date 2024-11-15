@@ -41,6 +41,7 @@
                                     <th>NAME</th>
                                     <th>EMAIL</th>
                                     <th>USERNAME</th>
+                                    <th>ORGANIZATION</th>
                                     <th>ROLES</th>
                                     <th width="107px">ACTIONS</th>
                                 </tr>
@@ -90,6 +91,12 @@
                             <input type="password" id="password" name="password" class="form-control" placeholder="Password">
                         </div> 
                         <div class="col-xl-12">
+                            <label for="organization" class="form-label">Organization</label>
+                            <select id="organization" name="organization[]" class="form-select mb-3" aria-label=".form-select-sm example">
+                                <option value="">-- Pilih Organization --</option>
+                            </select>
+                        </div>
+                        <div class="col-xl-12">
                             <label for="roles" class="form-label">Roles</label>
                             <select id="roles" name="roles[]" class="form-select mb-3" aria-label=".form-select-sm example">
                                 <option value="">-- Pilih Roles --</option>
@@ -128,6 +135,7 @@ $(document).ready(function (){
                 {data: 'name'},
                 {data: 'email'},
                 {data: 'username'},
+                {data: 'organization_id'},
                 {data: 'roles'},
                 {data: 'action',orderable: false,searchable: false},
             ],
