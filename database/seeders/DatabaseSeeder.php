@@ -11,48 +11,53 @@ use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
+
     public function run(): void
     {
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // create permissions
-        Permission::create(['name' => 'users menu']);
-        Permission::create(['name' => 'users create']);
-        Permission::create(['name' => 'users edit']);
-        Permission::create(['name' => 'users delete']);
+        // Define permissions
+        $permissions = [
+            'users menu',
+            'users create',
+            'users edit',
+            'users delete',
+            'roles menu',
+            'roles add-permission',
+            'roles create',
+            'roles edit',
+            'roles delete',
+            'permissions menu',
+            'permissions create',
+            'permissions edit',
+            'permissions delete',
+        ];
 
-        Permission::create(['name' => 'roles menu']);
-        Permission::create(['name' => 'roles add-permission']);
-        Permission::create(['name' => 'roles create']);
-        Permission::create(['name' => 'roles edit']);
-        Permission::create(['name' => 'roles delete']);
+        // Create permissions
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
 
-        Permission::create(['name' => 'permissions menu']);
-        Permission::create(['name' => 'permissions create']);
-        Permission::create(['name' => 'permissions edit']);
-        Permission::create(['name' => 'permissions delete']);
-
-        // create roles and assign created permissions
-        $role = Role::create(['name' => 'Administrator']);
-        $role->givePermissionTo(Permission::all());
-
-
-        // create user
+        // Create super admin user
         $user = User::factory()->create([
             'name' => 'SUPER ADMIN',
             'username' => 'supermin',
-            'password' => 'super123',
+            'password' => bcrypt('super123'),
             'email' => 'apps.development@dem.dharmap.com',
             'picture' => 'supermin_avatar.png',
             'organization_id' => 1,
         ]);
 
-        $user->hasRole('Administrator');
-        $user->syncRoles($role);
+        // Create role and assign permissions
+        $role = Role::firstOrCreate(['name' => 'Administrator']);
+        $role->givePermissionTo(Permission::all()); // Assign all permissions to the role
 
+        // Assign role to the user
+        $user->assignRole($role->name);
+
+        if ($user->hasRole('Administrator')) {
+        }
     }
+
 }

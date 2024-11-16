@@ -11,7 +11,7 @@
         <h3 class="page-title fw-semibold fs-18 mb-0">Users</h3>
         <div class="ms-md-1 ms-0">
             <nav>
-                @can('user create')
+                @can('users create')
                     <div class="d-flex">
                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-wave waves-light waves-effect waves-light" id="create"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create New</a>                  
                     </div>

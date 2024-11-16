@@ -13,10 +13,10 @@ class PermissionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:permission menu', ['only' => ['index']]);
-        $this->middleware('permission:permission create', ['only' => ['create']]);
-        $this->middleware('permission:permission edit', ['only' => ['edit']]);
-        $this->middleware('permission:permission delete', ['only' => ['delete']]);
+        $this->middleware('permission:permissions menu', ['only' => ['index']]);
+        $this->middleware('permission:permissions create', ['only' => ['create']]);
+        $this->middleware('permission:permissions edit', ['only' => ['edit']]);
+        $this->middleware('permission:permissions delete', ['only' => ['delete']]);
     }
 
     public function index(Request $request)
@@ -27,10 +27,10 @@ class PermissionController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn = '';                 
-                        if (Auth::user()->can('permission edit')) {
+                        if (Auth::user()->can('permissions edit')) {
                             $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> Edit </a>';
                         }
-                        if (Auth::user()->can('permission delete')) {
+                        if (Auth::user()->can('permissions delete')) {
                             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i> Delete </a>';
                         }
                         return $btn;

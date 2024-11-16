@@ -19,10 +19,10 @@ class UserController extends Controller
 {
     public function __construct() 
     {
-        $this->middleware('permission:user menu', ['only' => ['users']]);
-        $this->middleware('permission:user create', ['only' => ['create','store','getRoles']]);
-        $this->middleware('permission:user edit', ['only' => ['edit']]);
-        $this->middleware('permission:user delete', ['only' => ['delete']]);
+        $this->middleware('permission:users menu', ['only' => ['users']]);
+        $this->middleware('permission:users create', ['only' => ['create','store','getRoles']]);
+        $this->middleware('permission:users edit', ['only' => ['edit']]);
+        $this->middleware('permission:users delete', ['only' => ['delete']]);
     }
 
 
@@ -127,10 +127,10 @@ class UserController extends Controller
                 })
                 ->addColumn('action', function($row) {
                     $btn = '';                 
-                    if (Auth::user()->can('user edit')) {
+                    if (Auth::user()->can('users edit')) {
                         $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class=" ri-edit-line fw-semibold align-middle me-1"></i> Edit </a>';
                     }               
-                    if (Auth::user()->can('user delete')) {
+                    if (Auth::user()->can('users delete')) {
                         $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i> Delete</a>';
                     }
                     
@@ -141,75 +141,9 @@ class UserController extends Controller
         }
 
         return view('modules.user_role_permission.user.user', [
-            'title' => 'SIMPrp - Users',
-            // 'roles' => Role::all(),
+            'title' => 'SIMPro - Users',
         ]);
     }
-
-
-    // public function store(Request $request)
-    // {
-    //     $user   = Auth::user();
-   
-    //     // validasi
-    //     $validator = Validator::make($request->all(), [
-    //         'name' => 'required|string|max:255',
-    //         'username' => 'required|unique:users,username,'.$request->userID,
-    //         'email' => 'required|max:255|unique:users,email,'.$request->userID,
-    //         'password' => 'required|string|min:8|max:20',
-    //         'roles' => 'required',
-    //     ], [
-    //         'name.required' => 'Name harus diisi.',
-    //         'name.string' => 'Name harus berupa karakter.',
-    //         'name.max' => 'Name maksimal 255 karakter .',
-    //         'username.required' => 'Username harus diisi.',
-    //         'username.unique' => 'Username sudah ada.',
-    //         'email.required' => 'Email harus diisi.',
-    //         'email.max' => 'Email maksimal 255 karakter.',
-    //         'email.unique' => 'Email sudah terdaftar.',
-    //         'password.required' => 'Password harus diisi.',
-    //         'password.string' => 'Password harus berupa string.',
-    //         'password.min' => 'Password minimal 8 karakter.',
-    //         'password.max' => 'Password maksimal 20 karakter.',
-    //         'roles.required' => 'Roles harus diisi'
-    //     ]);
-
-    //     if (!$validator->passes()) {
-    //         return response()->json(['error'=>$validator->errors()->all()]);
-    //     }
-
-
-    //     /** Make avatar */
-    //     $path = 'images/users/';
-    //     $fontPath = public_path('build/assets/fonts/Poppins-Regular.ttf');
-    //     $char = strtoupper($request->name[0]);
-    //     $newAvatarName = $request->username.'_avatar';
-    //     $dest = $path . $newAvatarName . '.png'; // Ensure the file has a .png extension
-    
-    //     // Assuming makeAvatar function returns true if successful
-    //     $createAvatar = makeAvatar($fontPath, $dest, $char, 'png'); // Pass 'png' as the format parameter
-    //     $picture = $createAvatar ? $newAvatarName . '.png' : '';
-    
-    //     $user = User::updateOrCreate(
-    //         ['id' => $request->userID],
-    //         [
-    //             'name' => $request->name,
-    //             'email' => $request->email,
-    //             'username' => $request->username,
-    //             'password' => Hash::make($request->password),
-    //             'picture' => $picture
-    //         ]
-    //     );
-    
-    //     $user->syncRoles($request->roles);
-    
-    //     // Return success response
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Data berhasil disimpan',
-    //     ]);
-
-    // }
 
 
     public function store(Request $request)
@@ -221,7 +155,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|unique:users,username,' . $request->userID,
             'email' => 'required|max:255|unique:users,email,' . $request->userID,
-            'password' => 'nullable|string|min:8|max:20', // Allow nullable for update
+            'password' => 'nullable|string|min:8|max:20',
             'roles' => 'required',
         ], [
             'name.required' => 'Name harus diisi.',
@@ -254,7 +188,7 @@ class UserController extends Controller
             Storage::delete($dest);
         }
 
-        // Always create a new avatar
+        // Create new avatar
         $createAvatar = makeAvatar($fontPath, $dest, $char, 'png');
         $picture = $createAvatar ? $newAvatarName . '.png' : '';
 
@@ -266,7 +200,6 @@ class UserController extends Controller
             'picture' => $picture,
         ];
 
-        // If password is provided, hash and add it to the data array
         if (!empty($request->password)) {
             $data['password'] = $request->password;
         }
@@ -291,9 +224,11 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::with('roles')->findOrFail($id); // Ensure the user is found or fail with a 404 error
-        $roles = Role::pluck('name', 'name')->all(); // Get all roles
+        // Find user by ID
+        $user = User::with('roles')->findOrFail($id); 
 
+        // Get all roles
+        $roles = Role::pluck('name', 'name')->all(); 
         $hash = $user->password;
         
 
@@ -314,18 +249,18 @@ class UserController extends Controller
 
     public function delete(Request $request)
     {
-        // Attempt to find the user by ID
+        // Find user by ID
         $user = User::findOrFail($request->id);
 
-        // Delete the user's picture if it exists
+        // Delete the users picture if exists
         if ($user->picture) {
             $picturePath = public_path('images/users/' . $user->username. '_avatar.png');
             if (File::exists($picturePath)) {
-                unlink($picturePath); // Delete the picture file directly
+                unlink($picturePath); // Delete the picture file
             }
         }
 
-        // Delete the user
+        // Delete user
         $user->delete();
 
         // Redirect success
