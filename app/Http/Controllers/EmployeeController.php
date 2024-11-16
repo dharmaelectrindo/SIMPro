@@ -2,12 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use DataTables;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
 
 class EmployeeController extends Controller
 {
-   public function index(){
+
+    public function __construct() 
     {
+        $this->middleware('permission:employees menu', ['only' => ['index']]);
+        $this->middleware('permission:employees create', ['only' => ['create','store']]);
+        $this->middleware('permission:employees edit', ['only' => ['edit']]);
+        $this->middleware('permission:employees delete', ['only' => ['delete']]);
+    }
+
+    public function index(Request $request){
         if ($request->ajax()) {
             $data = DB::table('employees')->orderBy('employee_name', 'ASC')->get();
             return Datatables::of($data)
@@ -32,9 +47,10 @@ class EmployeeController extends Controller
                 }
                 
 
-            return view('modules.user_role_permission.role.role', [
-                'title' => 'SIMPro - Roles',
+            return view('modules.master_data.employee', [
+                'title' => 'SIMPro - Employees',
             ]);
-    }
-   } 
+    } 
+
+
 }

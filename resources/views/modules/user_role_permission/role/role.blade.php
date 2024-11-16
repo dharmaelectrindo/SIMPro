@@ -66,7 +66,7 @@
                             <input type="hidden" name="roleID" id="roleID">
                             <label for="roleName" class="form-label">Role Name</label>
                             <input type="text" id="roleName" name="roleName" class="form-control" placeholder="Role Name">
-                        </div>                                                                                                                                                                                                                      --}}
+                        </div>
                     </div>
             </div>
             <div class="modal-footer">
