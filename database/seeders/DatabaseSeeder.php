@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
         $role = Role::create(['name' => 'Administrator']);
         $role->givePermissionTo(Permission::all());
 
+
         // create user
         $user = User::factory()->create([
             'name' => 'SUPER ADMIN',
@@ -47,6 +48,7 @@ class DatabaseSeeder extends Seeder
             'password' => 'super123',
             'email' => 'apps.development@dem.dharmap.com',
             'picture' => 'supermin_avatar.png',
+            'organization_id' => 1,
         ]);
 
         $user->hasRole('Administrator');

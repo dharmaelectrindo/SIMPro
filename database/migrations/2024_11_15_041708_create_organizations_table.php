@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string("organizations_code",8);
             $table->string("organizations_level",10);
             $table->string("description",100);
-            $table->unsignedBigInteger("usrmdf");
+            $table->unsignedBigInteger("user_mdf");
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('usrmdf')->references('id')->on('users');
+            $table->foreign('user_mdf')->references('id')->on('users');
         });
         
     }

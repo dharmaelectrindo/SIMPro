@@ -15,6 +15,6 @@ class Organization extends Model
         'organizations_code',
         'organizations_level',
         'description',
-        'usrmdf'
+        'user_mdf'
     ];
 }

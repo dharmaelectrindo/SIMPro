@@ -24,7 +24,8 @@ class User extends Authenticatable
         'username',
         'password',
         'picture',
-        'organization_id'
+        'organization_id',
+        'user_mdf'
     ];
 
     /**
