@@ -6,7 +6,7 @@
 
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-        <h3 class="page-title fw-semibold fs-18 mb-0">Role</h3>
+        <h3 class="page-title fw-semibold fs-18 mb-0">Roles</h3>
         <div class="ms-md-1 ms-0">
             <nav>
                 @can('roles create')
