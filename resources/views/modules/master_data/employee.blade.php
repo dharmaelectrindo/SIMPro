@@ -37,7 +37,7 @@
                                 <th>EMAIL</th>
                                 <th>EMPLOYEE POSITION</th>
                                 <th>MOBILE NUMBER</th>
-                                <th width="410px">ACTIONS</th>
+                                <th class="text-center" width="200px">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,20 +73,20 @@
                                 <input type="text" id="npk" name="npk" class="form-control" placeholder="NPK">
                             </div>
                             <div class="mb-3">
-                                <label for="employee_name" class="form-label">Employee Name</label>
-                                <input type="text" id="employee_name" name="employee_name" class="form-control" placeholder="Employee Name">
+                                <label for="employeeName" class="form-label">Employee Name</label>
+                                <input type="text" id="employeeName" name="employeeName" class="form-control" placeholder="Employee Name">
                             </div>
                             <div class="mb-3">
-                                <label for="employee_position" class="form-label">Employee Position</label>
-                                <input type="text" id="employee_position" name="employee_position" class="form-control" placeholder="Employee Position">
+                                <label for="employeePosition" class="form-label">Employee Position</label>
+                                <input type="text" id="employeePosition" name="employeePosition" class="form-control" placeholder="Employee Position">
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" id="email" name="email" class="form-control" placeholder="Email">
                             </div>
                             <div class="mb-3">
-                                <label for="mobile_number" class="form-label">Mobile Number</label>
-                                <input type="text" class="form-control" id="mobile_number" name="mobile_number" data-toggle="input-mask" data-mask-format="0000-0000">
+                                <label for="mobileNumber" class="form-label">Mobile Number</label>
+                                <input type="text" class="form-control" id="mobileNumber" name="mobileNumber" data-toggle="input-mask" data-mask-format="0000-0000">
                             </div>                            
                         </div>                                                         
                     </div>
@@ -155,7 +155,11 @@
             $('.modal-title').html("Edit");
             $('#formModel').modal('show');
             $('#employeeID').val(data.id);
+            $('#npk').val(data.npk);
             $('#employeeName').val(data.employee_name);
+            $('#employeePosition').val(data.employee_position);
+            $('#email').val(data.email);
+            $('#mobileNumber').val(data.mobile_number);
         });
     });
 
@@ -205,7 +209,7 @@
             if (result.isConfirmed) {
                 $.ajax({
                     type: "DELETE", 
-                    url: "/roles/" + id, 
+                    url: "/employees/" + id, 
                     data: {
                         _token: $('meta[name="csrf-token"]').attr('content') 
                     },

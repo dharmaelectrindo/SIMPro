@@ -53,4 +53,83 @@ class EmployeeController extends Controller
     } 
 
 
+    public function store(Request $request)
+    {
+        // Remove extra spaces from input
+        $request->merge([
+            'npk' => remove_extra_spaces($request->input('npk')),
+            'employeeName' => remove_extra_spaces($request->input('employeeName')),
+            'employeePosition' => remove_extra_spaces($request->input('employeePosition')),
+            'email' => remove_extra_spaces($request->input('email')),
+            'mobileNumber' => remove_extra_spaces($request->input('mobileNumber')),
+        ]);
+
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'npk' => 'required|unique:employees,npk,' . $request->employeeID,
+            'employeeName' => 'required',
+            'employeePosition' => 'required',
+            'email' => 'required|email',
+            'mobileNumber' => 'required|regex:/^[0-9]+$/',
+        ], [
+            'npk.required' => 'NPK harus diisi.',
+            'npk.unique' => 'NPK sudah ada.',
+            'employeeName.required' => 'Employee Name harus diisi.',
+            'employeePosition.required' => 'Employee Position harus diisi.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Email tidak valid.',
+            'mobileNumber.required' => 'Mobile Number harus diisi.',
+            'mobileNumber.regex' => 'Mobile Number harus berupa angka.',
+        ]);
+
+        // Check validation
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->all()]);
+        }
+
+        // Update or create
+        Employee::updateOrCreate(
+            ['id' => $request->employeeID],
+            [
+                'npk' => $request->npk,
+                'employee_name' => $request->employeeName,
+                'employee_position' => $request->employeePosition,
+                'email' => $request->email,
+                'mobile_number' => $request->mobileNumber,
+                'user_mdf' => Auth::user()->id,
+            ]
+        );
+
+        // Return response
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil disimpan',
+        ]);
+    }
+
+
+
+
+    public function edit($id)
+    {
+        $data = Employee::find($id);
+
+        //  return response
+        return response()->json($data);
+    }
+
+    
+
+    public function destroy($id)
+    {
+        $data = Employee::findOrFail($id); 
+        $data->delete();
+        
+        //  return response
+        return response()->json([
+            'success' => true, 
+            'message' => 'Data berhasil dihapus.']);
+    }
+
+
 }
