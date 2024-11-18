@@ -154,7 +154,7 @@ $(document).ready(function (){
             $('#organizationsID').val(data.id);
             $('#organizationsCode').val(data.organizations_code);
             $('#description').val(data.description);
-            $('#organizationsLevel').val(data.organization_level).trigger("change");
+            $('#organizationsLevel').val(data.organizations_level).trigger("change");
         });
     });
 
@@ -200,6 +200,8 @@ $(document).ready(function (){
     $(document).on('click', '.delete', function (e) {
         e.preventDefault();
         var id = $(this).data('id');
+        
+
         Swal.fire({
                 title: 'Delete',
                 text: 'Are You Sure Delete This Data?',
@@ -211,9 +213,12 @@ $(document).ready(function (){
 
             if (result.isConfirmed) {
                 $.ajax({
-                type: "POST",
-                url: "/organizations/delete",
-                data: {id:id},
+                type: "DELETE",
+                url: "/organizations/" + id,
+                data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        id:id  
+                    },
                     success: function (data) {
                         Swal.fire('Delete Success', '', 'success');
                         table.draw();

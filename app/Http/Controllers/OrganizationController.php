@@ -21,7 +21,7 @@ class OrganizationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = DB::table('organizations')->orderBy('organizations_code', 'ASC')->get();
+            $data = Organization::All();
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
@@ -56,12 +56,13 @@ class OrganizationController extends Controller
 
         // validasi
         $validator = Validator::make($request->all(), [
-            'organizationsCode' => 'required',
+            'organizationsCode' => 'required|unique:organizations,organizations_code,'. $request->organizationsID,
             'description' => 'required|max:100',
             'organizationsLevel' => 'required',
         ],
         [
             'organizationsCode.required' => 'Please Entry Code',
+            'organizationsCode.unique' => 'Code Alredy',
             'description.required' => 'Please Entry Description',
         ],
             
@@ -75,8 +76,8 @@ class OrganizationController extends Controller
                 [
                     'organizations_code' => $request->organizationsCode,
                     'organizations_level' => $request->organizationsLevel,
-                    'odescription' => $request->descriptions,
-                    'usrmdf' => Auth::user()->id,
+                    'description' => $request->description,
+                    'user_mdf' => Auth::user()->id,
                 ]);
 
         //  return response
@@ -98,8 +99,11 @@ class OrganizationController extends Controller
 
     public function destroy(Request $request)
     {
-        Organization::find($request->id)->delete();
-        return response()->json(['success' => true, 'message' => 'Role deleted successfully.']);
+        $Organization = Organization::find($request->id);
+        if ($Organization != null) {
+        $Organization->delete();
+        }
+        return response()->json(['success' => true, 'message' => 'Role deleted successfully.','id' => $request->id]);
     }
 
 
