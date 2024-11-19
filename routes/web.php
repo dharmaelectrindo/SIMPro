@@ -7,7 +7,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\EmployeeController;
-
+use App\Http\Controllers\TemplateController;
 
 Auth::routes();
 
@@ -55,6 +55,8 @@ Route::resource('organizations', OrganizationController::class);
 //Employees
 Route::resource('employees', EmployeeController::class)->middleware('auth');
 
+//Templates
+Route::resource('templates', TemplateController::class)->middleware('auth');
 
 
 

@@ -21,7 +21,8 @@ class OrganizationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Organization::All();
+            $data = Organization::with("user")->select("organizations.*","users.name")
+                    ->join("users","organizations.user_mdf","users.id")->get();;
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
@@ -34,18 +35,18 @@ class OrganizationController extends Controller
                             }
                         return $btn;
                     })
+                    
                     ->addColumn('created_at', function($row)
                         {
                             $date = date("d/m/Y", strtotime($row->created_at));
                             return $date;
                         })
-                    ->rawColumns(['action','created_at'])
                     ->make(true);
                 }
                 
 
             return view('modules.master_data.organizations', [
-                'title' => 'SIMPro - Organizations',
+                'title' => 'SIMPro - Organizations'
             ]);
     }
     public function store(Request $request)
@@ -101,7 +102,7 @@ class OrganizationController extends Controller
     {
         $Organization = Organization::find($request->id);
         if ($Organization != null) {
-        $Organization->delete();
+            $Organization->delete();
         }
         return response()->json(['success' => true, 'message' => 'Role deleted successfully.','id' => $request->id]);
     }

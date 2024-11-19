@@ -8,7 +8,7 @@
 
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-        <h3 class="page-title fw-semibold fs-18">Organization</h3>
+        <h3 class="page-title fw-semibold fs-18">Template</h3>
         <div class="ms-md-1 ms-0">
             <nav>
                 @can('organizations create')
@@ -26,12 +26,10 @@
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-body">
-                    <table class="table table-responsive table-bordered" id="organization">
+                    <table class="table table-responsive table-bordered" id="template">
                         <thead>
                             <tr>
                                 <th width="40px">#</th>
-                                <th>CODE</th>
-                                <th>LEVEL</th>
                                 <th>DESCRIPTION</th>
                                 <th>USER MODIFY</th>
                                 <th class="text-center" width="185px">ACTIONS</th>
@@ -57,30 +55,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4">
-                <form id="organizationsForm" name="organizationsForm" class="form-horizontal">
+                <form id="templatesForm" name="templatesForm" class="form-horizontal">
                     @csrf
                     <div class="alert alert-danger error-msg" style="display:none">
                         <ul></ul>
                     </div>
+                    
                     <div class="row gy-2">
                         <div class="col-xl-12">
-                            <label for="organizationsCode" class="form-label">Code</label>
-                            <input type="text" id="organizationsCode" name="organizationsCode" class="form-control" placeholder="Code" maxlength="8">
-                        </div>                                                                                                                                                                                                      
-                    </div>
-                    <div class="row gy-2">
-                        <div class="col-xl-12">
-                            <label for="organizationsName" class="form-label">Level</label>
-                            <select id="organizationsLevel" name="organizationsLevel" class="form-control">
-                                <option value=""> Choose Level </option> 
-                                <option value="CEO"> CEO </option>
-                                <option value="Divisi"> Divisi </option>
-                                <option value="Department"> Department </option>
-                        </div>                                                                                                                                                                                                      
-                    </div>
-                    <div class="row gy-2">
-                        <div class="col-xl-12">
-                            <input type="hidden" name="organizationsID" id="organizationsID">
+                            <input type="hidden" name="templateID" id="templateID">
                             <label for="descriptions" class="form-label">Description</label>
                             <input type="text" id="description" name="description" class="form-control" placeholder="Description">
                         </div>                                                                                                                                                                                                      
@@ -109,14 +92,12 @@ $(document).ready(function (){
         }
     });
 
-    var table = $('#organization').DataTable({
+    var table = $('#template').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('organizations.index') }}",
+        ajax: "{{ route('templates.index') }}",
         columns: [
                 {data: 'DT_RowIndex',name: 'DT_Row_Index',orderable: false,searchable: false},
-                {data: 'organizations_code'},
-                {data: 'organizations_level'},
                 {data: 'description'},
                 {data: 'name'},
                 {data: 'action',orderable: false,searchable: false},
@@ -134,12 +115,10 @@ $(document).ready(function (){
 
     $('#create').click(function () {
         $('#saveBtn').val("create"); 
-        $('#organizationsID').val('');
-        $('#organizationsCode').val('');
+        $('#templateID').val('');
         $('#description').val('');
-        $('#organizationsLevel').val('').trigger("change");
         $('.error-msg').hide();
-        $('#organizationsForm').trigger("reset");
+        $('#templatesForm').trigger("reset");
         $('.modal-title').html("Create");
         $('#formModel').modal('show');
     });
@@ -147,16 +126,14 @@ $(document).ready(function (){
 
     $('body').on('click', '.edit', function () {
         var id = $(this).data('id');
-        $.get("{{ route('organizations.index') }}" + '/' + id + '/edit', function (data) {
+        $.get("{{ route('templates.index') }}" + '/' + id + '/edit', function (data) {
             $('.error-msg').hide();
-            $('#organizationsForm').trigger("reset");
+            $('#templatesForm').trigger("reset");
             $('#saveBtn').val("edit");
             $('.modal-title').html("Edit");
             $('#formModel').modal('show');
-            $('#organizationsID').val(data.id);
-            $('#organizationsCode').val(data.organizations_code);
+            $('#templateID').val(data.id);
             $('#description').val(data.description);
-            $('#organizationsLevel').val(data.organizations_level).trigger("change");
         });
     });
 
@@ -166,8 +143,8 @@ $(document).ready(function (){
         $(this).html('<span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>Loading..');
 
         $.ajax({
-            data: $('#organizationsForm').serialize(),
-            url: "{{ route('organizations.store') }}",
+            data: $('#templatesForm').serialize(),
+            url: "{{ route('templates.store') }}",
             type: "POST",
             dataType: 'json',
             success: function (data) {
@@ -216,7 +193,7 @@ $(document).ready(function (){
             if (result.isConfirmed) {
                 $.ajax({
                 type: "DELETE",
-                url: "/organizations/" + id,
+                url: "/templates/" + id,
                 data: {
                         _token: $('meta[name="csrf-token"]').attr('content'),
                         id:id  
