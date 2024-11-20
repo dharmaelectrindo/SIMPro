@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-
+use Eloquent;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles;
@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
     protected $primary = ['id'];
     protected $fillable = [
+        'id',
         'name',
         'email',
         'username',
@@ -57,6 +58,17 @@ class User extends Authenticatable
         }else{
             return asset('images/users/super_avatar.png');
         }
+    }
+
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class,"user_mdf","id");
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(Template::class,"user_mdf","id");
     }
 
 }
