@@ -92,14 +92,14 @@
                         </div> 
                         <div class="col-xl-12">
                             <label for="organization" class="form-label">Organization</label>
-                            <select id="organization" name="organization[]" class="form-select mb-3" aria-label=".form-select-sm example">
+                            <select id="organization" name="organization[]" class="form-select" aria-label=".form-select-sm example">
                                 <option value="">-- Pilih Organization --</option>
                             </select>
                         </div>
                         <div class="col-xl-12">
-                            <label for="roles" class="form-label">Roles</label>
-                            <select id="roles" name="roles[]" class="form-select mb-3" aria-label=".form-select-sm example">
-                                <option value="">-- Pilih Roles --</option>
+                            <label for="role" class="form-label">Role</label>
+                            <select id="role" name="role[]" class="form-select" aria-label=".form-select-sm example">
+                                <option value="">-- Pilih Role --</option>
                             </select>
                         </div>                                                                                                                                                                                                                       
                     </div>
@@ -149,6 +149,68 @@ $(document).ready(function (){
     });
 
 
+    function fetchEmployees() {
+        $.ajax({
+            url: "{{ route('users.getEmployees') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var employees = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.whitespace,
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    local: $.map(data, function(employee) {
+                        return employee.employee_name; 
+                    })
+                });
+
+                $('#name').typeahead(
+                    {
+                        hint: true,
+                        highlight: true,
+                        minLength: 1
+                    },
+                    {
+                        name: 'name',
+                        source: employees
+                    }
+                );
+
+            },
+            error: function(error) {
+                console.log('Error fetching employees:', error);
+            }
+        });
+    }
+
+    $('#employeeName').on('change', function() {
+        var employeeName = $(this).val();  
+
+        if (employeeName) {
+            $.ajax({
+                url: "{{ route('users.getEmployeeId') }}",
+                type: 'GET',
+                data: {
+                    employee_name: employeeName
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.employee_id) {
+                        $('#employee_id').val(response.employee_id);  
+                    } else {
+                        $('#employee_id').val('');  
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching employee ID:', error);
+                    $('#employee_id').val(''); 
+                }
+            });
+        } else {
+            $('#employee_id').val('');
+        }
+    });
+
+
     function fetchRoles() {
         $.ajax({
             url: "{{ route('users.getRoles') }}",
@@ -175,11 +237,13 @@ $(document).ready(function (){
         $('#name').val('');
         $('#email').val('');
         $('#username').val('');
+        $('#organization').val('');
         $('#roles').val('');
         $('.error-msg').hide();
         $('#userForm').trigger("reset");
         $('.modal-title').html("Create");
         $('#formModel').modal('show');
+        fetchEmployees();
         fetchRoles();
     });
 

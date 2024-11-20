@@ -98,7 +98,7 @@ class UserController extends Controller
             }
         }
 
-    }
+    } 
 
 
 
@@ -156,6 +156,7 @@ class UserController extends Controller
             'username' => 'required|unique:users,username,' . $request->userID,
             'email' => 'required|max:255|unique:users,email,' . $request->userID,
             'password' => 'nullable|string|min:8|max:20',
+            'organizationID' => 'required',
             'roles' => 'required',
         ], [
             'name.required' => 'Name harus diisi.',
@@ -169,6 +170,7 @@ class UserController extends Controller
             'password.string' => 'Password harus berupa string.',
             'password.min' => 'Password minimal 8 karakter.',
             'password.max' => 'Password maksimal 20 karakter.',
+            'organizationID.required' => 'Organization harus diisi.',
             'roles.required' => 'Roles harus diisi'
         ]);
 
@@ -198,13 +200,14 @@ class UserController extends Controller
             'email' => $request->email,
             'username' => $request->username,
             'picture' => $picture,
+            'organization_id' => $request->organizationID,
         ];
 
         if (!empty($request->password)) {
             $data['password'] = $request->password;
         }
 
-        // Update or create user
+        // Update or create
         $user = User::updateOrCreate(
             ['id' => $request->userID],
             $data
@@ -249,7 +252,7 @@ class UserController extends Controller
 
     public function delete(Request $request)
     {
-        // Find user by ID
+        // Find user ID
         $user = User::findOrFail($request->id);
 
         // Delete the users picture if exists
