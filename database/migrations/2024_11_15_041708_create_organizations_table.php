@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger("user_mdf");
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('user_mdf')->references('id')->on('users');
+            $table->foreign('user_mdf')->references('id')->on('users')->onDelete("cascade");
         });
         
     }
