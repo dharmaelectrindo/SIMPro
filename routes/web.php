@@ -37,8 +37,9 @@ Route::post('change-password', [UserController::class, 'change_password'])->name
 
 // Roles
 Route::resource('roles', RoleController::class)->middleware('auth');
-Route::get('/roles/add-permission/{roles}', [RoleController::class, 'addPermissionToRole'])->name('roles.add-permission');
-Route::post('/roles/give-permission', [RoleController::class, 'givePermissionToRole'])->name('roles.give-permission');
+Route::get('/roles/{roles}/assign-permissions', [RoleController::class, 'assignPermissionToRole'])->name('roles.assign-permissions');
+Route::post('/roles/give-permissions', [RoleController::class, 'givePermissionToRole'])->name('roles.give-permissions');
+
 
 // Permission
 Route::resource('permissions', PermissionController::class);
@@ -47,6 +48,8 @@ Route::resource('permissions', PermissionController::class);
 Route::resource('users', UserController::class)->middleware('auth');
 Route::get('/users', [UserController::class, 'users'])->name('users.users');
 Route::post('/users/delete', [UserController::class, 'delete'])->name('users.delete');
+Route::get('/getemployees', [UserController::class, 'getEmployees'])->name('users.getEmployees');
+Route::get('/getEmployeeId', [UserController::class, 'getEmployeeId'])->name('users.getEmployeeId');
 Route::get('/getroles', [UserController::class, 'getRoles'])->name('users.getRoles');
 
 // Organization
