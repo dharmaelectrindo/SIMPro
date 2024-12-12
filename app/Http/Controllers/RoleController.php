@@ -18,7 +18,7 @@ class RoleController extends Controller
         $this->middleware('permission:roles create', ['only' => ['create','store','addPermissionToRole','givePermissionToRole']]);
         $this->middleware('permission:roles edit', ['only' => ['edit']]);
         $this->middleware('permission:roles delete', ['only' => ['delete']]);
-        $this->middleware('permission:roles add-permission', ['only' => ['add-permission']]);
+        $this->middleware('permission:roles assign-permissions', ['only' => ['assign-permissions']]);
     }
 
     public function index(Request $request)
@@ -29,14 +29,14 @@ class RoleController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn = '';                 
-                        if (Auth::user()->can('roles add-permission')) {
-                            $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" data-toggle="tooltip" data-original-title="Add Permission" class="btn btn-sm btn-success add-permission"><i class="ri-key-line fw-semibold align-middle me-1"></i> Add/Update Permission </a>';
-                        }
+                        // if (Auth::user()->can('roles assign-permissions')) {
+                            $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" data-toggle="tooltip" data-original-title="Add Permission" class="btn btn-sm btn-outline-success assign-permissions"><i class="uil-key-skeleton-alt fw-semibold align-middle me-1"></i>Assign Permissions</a>';
+                        // }
                         if (Auth::user()->can('roles edit')) {
-                            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> Edit </a>';
+                            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-outline-warning edit"><i class=" uil-edit-alt fw-semibold align-middle me-1"></i>Edit</a>';
                         }
                         if (Auth::user()->can('roles delete')) {
-                            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i> Delete </a>';
+                            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-outline-danger delete"><i class="uil-trash-alt fw-semibold align-middle me-1"></i>Delete</a>';
                         }
                         return $btn;
                     })
@@ -92,6 +92,7 @@ class RoleController extends Controller
         return response()->json($data);
     }
 
+
     public function destroy($id)
     {
         $roles = Role::findOrFail($id); 
@@ -102,48 +103,44 @@ class RoleController extends Controller
 
     
 
-    public function addPermissionToRole($id)
+    public function assignPermissionToRole($id)
     {
         $role = Role::findOrFail($id);
+        
         $permissions = Permission::all();
-        $rolePermissions = DB::table('role_has_permissions')
-            ->where('role_has_permissions.role_id', $role->id)
-            ->pluck('role_has_permissions.permission_id')
-            ->all();
-        // $rolePermissions = $role->permissions->pluck('id')->toArray();
+        $groupedPermissions = $permissions->groupBy(function ($permission) {
+            return explode(' ', $permission->name)[0]; 
+        });
 
+        $rolePermissions = DB::table('role_has_permissions')
+            ->where('role_id', $role->id)
+            ->pluck('permission_id')
+            ->toArray();
+
+        // Return success response
         return response()->json([
             'role' => $role,
-            'permissions' => $permissions,
-            'rolePermissions' => $rolePermissions
+            'groupedPermissions' => $groupedPermissions,
+            'rolePermissions' => $rolePermissions,
         ]);
     }
 
 
     public function givePermissionToRole(Request $request)
     {
-        $roleId = $request->input('rolePermissionID'); // Adjust based on your form field name
-        $permission = $request->input('permissions'); // Adjust based on your form field name
+        $roleId = $request->input('rolePermissionID');
+        $permission = $request->input('permissions');
 
-        // try {
-            $role = Role::findOrFail($roleId); // Find the role by ID
-            $role->syncPermissions($permission); // Assign the permissions to the role
+        try { 
+            $role = Role::findOrFail($roleId);
+            $role->syncPermissions($permission);
 
+            // Return success response
             return response()->json(['message' => 'Permissions updated successfully']);
-        // } catch (\Exception $e) {
-        //     return response()->json(['error' => $e->getMessage()], 500);
-        // }
-    }
-
-
-    public function show($id)
-    {
-
-    }
-
-    public function update($id)
-    {
-
+        } catch (\Exception $e) {
+            // Return error response
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
 

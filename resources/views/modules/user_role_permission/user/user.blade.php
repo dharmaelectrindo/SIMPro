@@ -289,72 +289,67 @@ $(document).ready(function (){
             dataType: 'json',
             success: function (data) {
                 if ($.isEmptyObject(data.error)) {
-                        Swal.fire("Done!", data.message, "success");
-                        $('.error-msg').hide();
-                        $('#formModel').modal('hide');
+                    Swal.fire("Done!", data.message, "success");
+                    $('.error-msg').hide();
+                    $('#formModel').modal('hide');
+                    $('#saveBtn').html('Save');
+                }else{
+                    printErrorMsg(data.error);
+                    $('#saveBtn').html('Save');
+                }
+                    table.draw();
+                },
+                    error: function (data) {
+                        console.log('Error:', data);
                         $('#saveBtn').html('Save');
-
-                    }else{
-                        printErrorMsg(data.error);
-                        $('#saveBtn').html('Save');
-                    }
-                        table.draw();
-                    },
-                        error: function (data) {
-                            console.log('Error:', data);
-                            $('#saveBtn').html('Save');
-                    }
-                });
-
-        function printErrorMsg(msg) {
-            $('.error-msg').find('ul').html('');
-            $('.error-msg').css('display','block');
-            $.each( msg, function( key, value ) {
-                $(".error-msg").find("ul").append('<li>'+value+'</li>');
-            });
-        }
+                }
+        });
     });
 
 
     $(document).on('click', '.delete', function (e) {
         e.preventDefault();
         var id = $(this).data('id');
+        
         Swal.fire({
-                title: 'Delete',
-                text: 'Apakah anda yakin ingin menghapus data ini?',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-                icon: 'question',
-            }).then((result) => {
-
+            title: 'Delete',
+            text: 'Apakah anda yakin ingin menghapus data ini?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            icon: 'question',
+        }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                type: "POST",
-                url: "/users/delete",
-                data: {id:id},
+                    type: "DELETE", 
+                    url: "/users/" + id,
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content') 
+                    },
                     success: function (data) {
                         Swal.fire('Data berhasil di hapus', '', 'success');
-                        table.draw();
+                        table.draw(); 
                     },
                     error: function (data) {
                         console.log('Error:', data);
                         Swal.fire('Data gagal di hapus', '', 'error');
-                        table.draw();
+                        table.draw(); 
                     }
                 });
             }
-
-            function printErrorMsg(msg) {
-                $('.error-msg').find('ul').html('');
-                $('.error-msg').css('display','block');
-                $.each( msg, function( key, value ) {
-                    $(".error-msg").find("ul").append('<li>'+value+'</li>');
-                });
-            }
-
         });
     });
+
+
+    // Function error message
+    function printErrorMsg(msg) {
+        $('.error-msg').find('ul').html('');
+        $('.error-msg').css('display','block');
+        $.each( msg, function( key, value ) {
+            $(".error-msg").find("ul").append('<li>'+value+'</li>');
+        });
+    }
+
 
 });
 </script>

@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             'users edit',
             'users delete',
             'roles menu',
-            'roles add-permission',
+            'roles assign-permissions',
             'roles create',
             'roles edit',
             'roles delete',
