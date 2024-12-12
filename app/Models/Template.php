@@ -16,8 +16,5 @@ class Template extends Model
         'user_mdf'
     ];
 
-    public function user()
-        {
-            return $this->hasOne(User::class,"id","user_mdf");
-        }
+    
 }

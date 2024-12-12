@@ -8,7 +8,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TemplateController;
-
+use App\Http\Controllers\TaskController;
 Auth::routes();
 
 Route::post('/login', function ()
@@ -60,6 +60,8 @@ Route::resource('employees', EmployeeController::class)->middleware('auth');
 
 //Templates
 Route::resource('templates', TemplateController::class)->middleware('auth');
+//Templates
+Route::resource('tasks', TemplateController::class)->middleware('auth');
 
 
 

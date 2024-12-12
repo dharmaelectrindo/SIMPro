@@ -62,14 +62,6 @@ class User extends Authenticatable
     }
 
 
-    public function organization()
-    {
-        return $this->belongsTo(Organization::class,"user_mdf","id");
-    }
-
-    public function template()
-    {
-        return $this->belongsTo(Template::class,"user_mdf","id");
-    }
+   
 
 }
