@@ -131,22 +131,24 @@ $(document).ready(function (){
         serverSide: true,
         ajax: "{{ route('users.users') }}",
         columns: [
-                {data: 'DT_RowIndex',name: 'DT_Row_Index',orderable: false,searchable: false},
-                {data: 'name'},
-                {data: 'email'},
-                {data: 'username'},
-                {data: 'organization_id'},
-                {data: 'roles'},
-                {data: 'action',orderable: false,searchable: false},
-            ],
+            {data: 'DT_RowIndex', name: 'DT_Row_Index', orderable: false, searchable: false},
+            {data: 'name'},
+            {data: 'email'},
+            {data: 'username'},
+            {data: 'organization', name: 'organization.description'},
+            {data: 'roles', orderable: false, searchable: false},
+            {data: 'action', orderable: false, searchable: false}
+        ],
         dom: "<'row'<'col-md-2'l><'col-md-3'B><'col-md-7'f>>" +
-            "<'row'<'col-md-12'tr>>" +
-            "<'row'<'col-md-5'i><'col-md-7'p>>"
-        ,
+             "<'row'<'col-md-12'tr>>" +
+             "<'row'<'col-md-5'i><'col-md-7'p>>",
         buttons: [
-            'excel', 'pdf', 'print'
+            'excelHtml5',
+            'pdfHtml5',
+            'print'
         ]
     });
+
 
 
     function fetchEmployees() {
