@@ -60,8 +60,8 @@ Route::resource('employees', EmployeeController::class)->middleware('auth');
 
 //Templates
 Route::resource('templates', TemplateController::class)->middleware('auth');
-//Templates
-Route::resource('tasks', TemplateController::class)->middleware('auth');
+//Tasks
+Route::resource('tasks', TaskController::class)->middleware('auth');
 
 
 

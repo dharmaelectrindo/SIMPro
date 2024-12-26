@@ -78,6 +78,26 @@
     </div>
 </div>
 
+<div class="modal fade" id="formDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modelHeading"></h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <form id="taksForm" name="tasksForm" class="form-horizontal">
+                    @csrf
+                    <div id="loadDetail"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
