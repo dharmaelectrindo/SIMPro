@@ -19,9 +19,15 @@ return new class extends Migration
             $table->string('username');
             $table->string('password');
             $table->string('picture');
-            $table->foreignId('organization_id');
+            $table->unsignedBigInteger("organization_id");
+            $table->unsignedBigInteger("user_crt");
+            $table->unsignedBigInteger("user_mdf");
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('user_crt')->references('id')->on('users')->onDelete("cascade");
+            $table->foreign('user_mdf')->references('id')->on('users')->onDelete("cascade");
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

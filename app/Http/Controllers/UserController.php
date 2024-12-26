@@ -34,6 +34,7 @@ class UserController extends Controller
             return view('auth.login');
         }
     }
+    
 
     public function login_action(Request $request)
     {
@@ -114,26 +115,31 @@ class UserController extends Controller
     public function users(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::with('roles')->select(['id', 'name', 'email', 'username'])->orderBy('name', 'ASC');
+            $data = User::with(['roles:id,name', 'organizations:id,description'])
+                    ->select(['id', 'name', 'email', 'username', 'organization_id'])
+                    ->orderBy('name', 'ASC');
 
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('organization', function($data) {
+                    return $data->organizations ? e($data->organizations->description) : '-';
+                })
                 ->addColumn('roles', function($data) {
                     $badges = '';
                     foreach ($data->roles as $role) {
-                        $badges .= '<span class="badge bg-warning">' . $role->name . '</span> ';
+                        $badges .= '<span class="badge bg-warning">' . e($role->name) . '</span> ';
                     }
                     return $badges;
                 })
                 ->addColumn('action', function($row) {
-                    $btn = '';                 
+                    $btn = '';
                     if (Auth::user()->can('users edit')) {
-                        $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class=" ri-edit-line fw-semibold align-middle me-1"></i> Edit </a>';
-                    }               
+                        $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> Edit</a>';
+                    }
                     if (Auth::user()->can('users delete')) {
                         $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i> Delete</a>';
                     }
-                    
+
                     return $btn;
                 })
                 ->rawColumns(['roles', 'action'])
@@ -144,6 +150,7 @@ class UserController extends Controller
             'title' => 'SIMPro - Users',
         ]);
     }
+
 
 
     public function store(Request $request)

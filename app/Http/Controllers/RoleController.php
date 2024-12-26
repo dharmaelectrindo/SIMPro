@@ -6,9 +6,10 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DataTables;
-use Illuminate\Support\Facades\Validator; 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
 
 class RoleController extends Controller
 {
@@ -21,6 +22,7 @@ class RoleController extends Controller
         $this->middleware('permission:roles assign-permissions', ['only' => ['assign-permissions']]);
     }
 
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -29,9 +31,9 @@ class RoleController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn = '';                 
-                        // if (Auth::user()->can('roles assign-permissions')) {
+                        if (Auth::user()->can('roles assign-permissions')) {
                             $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" data-toggle="tooltip" data-original-title="Add Permission" class="btn btn-sm btn-outline-success assign-permissions"><i class="uil-key-skeleton-alt fw-semibold align-middle me-1"></i>Assign Permissions</a>';
-                        // }
+                        }
                         if (Auth::user()->can('roles edit')) {
                             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-outline-warning edit"><i class=" uil-edit-alt fw-semibold align-middle me-1"></i>Edit</a>';
                         }
@@ -84,6 +86,7 @@ class RoleController extends Controller
             'message' => 'Data berhasil disimpan',
         ]);
     }
+    
 
 
     public function edit($id)

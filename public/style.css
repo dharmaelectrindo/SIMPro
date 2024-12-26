@@ -1,60 +1,65 @@
 @font-face {
-    font-family: Atlas;
-    src: url(fonts/AtlasGroteskWeb.ttf);
+    font-family: Manrope-Medium;
+    src: url(fonts/Manrope-Medium.ttf);
 }
 
 @font-face {
-    font-family: Poppins;
-    src: url(fonts/Poppins-Regular.ttf);
+    font-family: Manrope-SemiBold;
+    src: url(fonts/Manrope-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: Manrope-Bold;
+    src: url(fonts/Manrope-Bold.ttf);
 }
 
 body{
-	font-family: 'Atlas';
+	font-family: 'Manrope-Medium';
     font-size: 10pt;
 }
 
 label{
-    font-family: 'Atlas';
+    font-family: 'Manrope-SemiBold';
     font-size: 10pt;
 }
 
 h1{
-	font-family: 'Poppins';
+	font-family: 'Manrope-Bold';
 	font-size: 28pt;
 	font-variant: inherit;
 }
 
 h2{
-	font-family: 'Poppins';
+	font-family: 'Manrope-Bold';
 	font-size: 18pt;
 	font-variant: inherit;
 }
 
 h3{
-	font-family: 'Poppins';
+	font-family: 'Manrope-Bold';
 	font-size: 14pt;
 	font-variant: inherit;
 }
 
 h4{
-	font-family: 'Poppins';
+	font-family: 'Manrope-Bold';
 	font-size: 12pt;
 	font-variant: inherit;
 }
 
 h5{
-	font-family: 'Poppins';
+	font-family: 'Manrope-Bold';
 	font-size: 10pt;
 	font-variant: inherit;
 }
 
 table{
-	font-family: 'Atlas';
+	font-family: 'Manrope-SemiBold';
     font-size: 11pt;
 }
 
 .btn{
-	font-family: 'Atlas';
+	font-family: 'Manrope-SemiBold';
     font-size: 11pt;
 }
 
@@ -73,6 +78,32 @@ table{
         bottom: 0;
         width: 100%;
     }
+} */
+
+
+/* .ui-autocomplete {
+    z-index: 1051; 
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #fff;
+    border: 1px solid #cccccc;
+}
+
+
+.ui-autocomplete {
+    top: 100% !important;
+    left: 0 !important;
+} */
+
+
+/* #employee_name {
+    position: relative;
+    z-index: 10;
+} */
+
+/* .container-class {
+    overflow: visible !important;
 } */
 
 

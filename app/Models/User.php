@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Eloquent;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Organization;
 
 class User extends Authenticatable
 {
@@ -27,6 +29,7 @@ class User extends Authenticatable
         'password',
         'picture',
         'organization_id',
+        'user_crt',
         'user_mdf'
     ];
 
@@ -61,8 +64,10 @@ class User extends Authenticatable
         }
     }
 
-    public function templates() {
-        return $this->hasMany(Template::class);
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class,"user_mdf","id");
     }
     public function organizations() {
         return $this->hasMany(Organization::class);
