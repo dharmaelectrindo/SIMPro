@@ -21,8 +21,7 @@ class OrganizationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Organization::with("user")->select("organizations.*","users.name")
-                    ->join("users","organizations.user_mdf","users.id")->get();;
+            $data = Organization::with("user")->get();
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
@@ -78,7 +77,6 @@ class OrganizationController extends Controller
                     'organizations_code' => $request->organizationsCode,
                     'organizations_level' => $request->organizationsLevel,
                     'description' => $request->description,
-                    'user_mdf' => Auth::user()->id,
                 ]);
 
         //  return response

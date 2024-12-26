@@ -11,7 +11,7 @@
         <h3 class="page-title fw-semibold fs-18">Template</h3>
         <div class="ms-md-1 ms-0">
             <nav>
-                @can('organizations create')
+                @can('templates create')
                     <div class="d-flex">
                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-wave waves-light waves-effect waves-light" id="create"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create New</a>                  
                     </div>
@@ -99,7 +99,7 @@ $(document).ready(function (){
         columns: [
                 {data: 'DT_RowIndex',name: 'DT_Row_Index',orderable: false,searchable: false},
                 {data: 'description'},
-                {data: 'name'},
+                {data: 'user.name'},
                 {data: 'action',orderable: false,searchable: false},
             ],
         dom: "<'row'<'col-md-2'l><'col-md-3'B><'col-md-7'f>>" +

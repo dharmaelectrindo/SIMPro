@@ -61,6 +61,13 @@ class User extends Authenticatable
         }
     }
 
+    public function templates() {
+        return $this->hasMany(Template::class);
+    }
+    public function organizations() {
+        return $this->hasMany(Organization::class);
+    }
+
 
    
 

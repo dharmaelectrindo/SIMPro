@@ -20,8 +20,7 @@ class TemplateController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Template::with("user")->select("templates.*","users.name")
-            ->join("users","templates.user_mdf","users.id")->get();;
+            $data =  Template::with('user')->get();
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
@@ -73,7 +72,6 @@ class TemplateController extends Controller
         Template::updateOrCreate(['id' => $request->templateID],
                 [
                     'description' => $request->description,
-                    'user_mdf' => Auth::user()->id,
                 ]);
 
         //  return response

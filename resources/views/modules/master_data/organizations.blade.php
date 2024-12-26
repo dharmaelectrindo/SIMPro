@@ -57,7 +57,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4">
-                <form id="organizationsForm" name="organizationsForm" class="form-horizontal">
+                <form id="organizationsForm" name="organizationsForm" class="form-horizontal" autocomplete="off">
                     @csrf
                     <div class="alert alert-danger error-msg" style="display:none">
                         <ul></ul>
@@ -118,7 +118,7 @@ $(document).ready(function (){
                 {data: 'organizations_code'},
                 {data: 'organizations_level'},
                 {data: 'description'},
-                {data: 'name'},
+                {data: 'user.name'},
                 {data: 'action',orderable: false,searchable: false},
             ],
         dom: "<'row'<'col-md-2'l><'col-md-3'B><'col-md-7'f>>" +
