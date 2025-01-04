@@ -2,27 +2,22 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-use Eloquent;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Organization;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory;
+    use Notifiable;
+    use HasRoles;
+    use SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $primary = ['id'];
+    protected $primaryKey = 'id';
     protected $fillable = [
-        'id',
         'name',
         'email',
         'username',
@@ -33,21 +28,11 @@ class User extends Authenticatable
         'user_mdf'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -56,27 +41,40 @@ class User extends Authenticatable
         ];
     }
 
-    public function getPictureAttribute($value){
-        if($value){
-            return asset('images/users/'.$value);
-        }else{
+    public function getPictureAttribute($value)
+    {
+        if ($value) {
+            return asset('images/users/' . $value);
+        } else {
             return asset('images/users/super_avatar.png');
         }
     }
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
-    }
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class,"user_mdf","id", "organization_id");
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 
-    public function template()
+
+    public static function boot()
     {
-        return $this->belongsTo(Template::class,"user_mdf","id");
-    }
+        parent::boot();
 
+        static::creating(function ($model) {
+            if (auth()->check()) {
+                $model->user_crt = auth()->id();
+            }
+        });
+
+        static::updating(function ($model) {
+            if (auth()->check()) {
+                $model->user_mdf = auth()->id();
+            }
+        });
+
+        static::deleting(function ($model) {
+            // Logika sebelum hapus
+        });
+    }
 }

@@ -135,7 +135,7 @@ $(document).ready(function (){
             {data: 'name'},
             {data: 'email'},
             {data: 'username'},
-            {data: 'organization', name: 'organization.description'},
+            {data: 'organization'},
             {data: 'roles', orderable: false, searchable: false},
             {data: 'action', orderable: false, searchable: false}
         ],
@@ -148,7 +148,6 @@ $(document).ready(function (){
             'print'
         ]
     });
-
 
 
     function fetchEmployees() {

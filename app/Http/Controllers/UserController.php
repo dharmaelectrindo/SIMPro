@@ -115,23 +115,23 @@ class UserController extends Controller
     public function users(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::with(['roles:id,name', 'organizations:id,description'])
-                    ->select(['id', 'name', 'email', 'username', 'organization_id'])
-                    ->orderBy('name', 'ASC');
+            $data = User::with('organization', 'roles')
+                ->select('users.*')
+                ->orderBy('name', 'ASC');
 
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('organization', function($data) {
-                    return $data->organizations ? e($data->organizations->description) : '-';
+                ->addColumn('organization', function ($data) {
+                    return $data->organization ? $data->organization->description : '-';
                 })
-                ->addColumn('roles', function($data) {
+                ->addColumn('roles', function ($data) {
                     $badges = '';
                     foreach ($data->roles as $role) {
-                        $badges .= '<span class="badge bg-warning">' . e($role->name) . '</span> ';
+                        $badges .= '<span class="badge bg-warning">' . $role->name . '</span> ';
                     }
                     return $badges;
                 })
-                ->addColumn('action', function($row) {
+                ->addColumn('action', function ($row) {
                     $btn = '';
                     if (Auth::user()->can('users edit')) {
                         $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> Edit</a>';
@@ -142,15 +142,14 @@ class UserController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['roles', 'action'])
+                ->rawColumns(['organization', 'roles', 'action'])
                 ->make(true);
         }
 
         return view('modules.user_role_permission.user.user', [
-            'title' => 'SIMPro - Users',
+            'title' => 'SIMPro - Pengguna',
         ]);
     }
-
 
 
     public function store(Request $request)
