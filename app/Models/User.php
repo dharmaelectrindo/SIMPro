@@ -2,22 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Eloquent;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Organization;
 
 class User extends Authenticatable
 {
-    use HasFactory;
-    use Notifiable;
-    use HasRoles;
-    use SoftDeletes;
+    use HasFactory, Notifiable, HasRoles;
 
-    protected $primaryKey = 'id';
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $primary = ['id'];
     protected $fillable = [
+        'id',
         'name',
         'email',
         'username',
@@ -28,11 +33,21 @@ class User extends Authenticatable
         'user_mdf'
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -41,11 +56,10 @@ class User extends Authenticatable
         ];
     }
 
-    public function getPictureAttribute($value)
-    {
-        if ($value) {
-            return asset('images/users/' . $value);
-        } else {
+    public function getPictureAttribute($value){
+        if($value){
+            return asset('images/users/'.$value);
+        }else{
             return asset('images/users/super_avatar.png');
         }
     }
@@ -53,28 +67,13 @@ class User extends Authenticatable
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+        return $this->belongsTo(Organization::class,"user_mdf","id");
+    }
+    public function organizations() {
+        return $this->hasMany(Organization::class);
     }
 
 
-    public static function boot()
-    {
-        parent::boot();
-        
-        static::creating(function ($model) {
-            if (auth()->check()) {
-                $model->user_crt = auth()->id();
-            }
-        });
+   
 
-        static::updating(function ($model) {
-            if (auth()->check()) {
-                $model->user_mdf = auth()->id();
-            }
-        });
-
-        static::deleting(function ($model) {
-            // Logika sebelum hapus
-        });
-    }
 }

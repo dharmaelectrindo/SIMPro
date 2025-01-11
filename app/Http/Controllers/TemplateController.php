@@ -20,17 +20,17 @@ class TemplateController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Template::with("user")->select("templates.*","users.name")
-            ->join("users","templates.user_mdf","users.id")->get();;
+            $data =  Template::with('user')->get();
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn = '';                 
                             if (Auth::user()->can('templates edit')) {
-                                $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> Edit </a>';
+                                $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> </a>';
+                                $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Detail" class="btn btn-sm btn-warning detail"><i class="ri-edit-line fw-semibold align-middle me-1"></i> </a>';
                             }
                             if (Auth::user()->can('templates delete')) {
-                                $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i> Delete </a>';
+                                $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i>  </a>';
                             }
                         return $btn;
                     })
@@ -73,7 +73,6 @@ class TemplateController extends Controller
         Template::updateOrCreate(['id' => $request->templateID],
                 [
                     'description' => $request->description,
-                    'user_mdf' => Auth::user()->id,
                 ]);
 
         //  return response

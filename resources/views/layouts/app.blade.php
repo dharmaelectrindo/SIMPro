@@ -27,6 +27,10 @@
     <link href={{ ('hyper/dist/saas/assets/css/app-saas.min.css') }} rel="stylesheet" type="text/css" id="app-style" />
     <!-- Icons css -->
     <link href={{ asset('hyper/dist/saas/assets/css/icons.min.css') }} rel="stylesheet" type="text/css" />
+    <!-- Treeview css -->
+    <link href={{ asset('hyper/dist/saas/assets/vendor/treeview/jquery.treeview.css') }} rel="stylesheet" type="text/css" />
+<link href={{ asset('hyper/dist/saas/assets/vendor/treeview/screen.css') }} rel="stylesheet" type="text/css" />
+
 
     <!-- Datatables css -->
     <link rel="stylesheet" type="text/css" href={{ asset('hyper/dist/saas/assets/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}>
@@ -737,6 +741,8 @@
     <!--  Select2 Js -->
     <script src={{ asset('hyper/dist/saas/assets/vendor/select2/js/select2.min.js') }}></script>
 
+    <!--  Treeview Js -->
+    
     <!-- Typehead Plugin js -->
     <script src={{ asset('hyper/dist/saas/assets/vendor/handlebars/handlebars.min.js') }}></script>
     <script src={{ asset('hyper/dist/saas/assets/vendor/typeahead.js/typeahead.bundle.min.js') }}></script>

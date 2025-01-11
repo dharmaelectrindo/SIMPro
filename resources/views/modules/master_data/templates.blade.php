@@ -11,7 +11,7 @@
         <h3 class="page-title fw-semibold fs-18">Template</h3>
         <div class="ms-md-1 ms-0">
             <nav>
-                @can('organizations create')
+                @can('templates create')
                     <div class="d-flex">
                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-wave waves-light waves-effect waves-light" id="create"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create New</a>                  
                     </div>
@@ -78,6 +78,26 @@
     </div>
 </div>
 
+<div class="modal fade" id="formDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modelHeading"></h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <form id="taksForm" name="tasksForm" class="form-horizontal">
+                    @csrf
+                    <div id="loadDetail"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -99,7 +119,7 @@ $(document).ready(function (){
         columns: [
                 {data: 'DT_RowIndex',name: 'DT_Row_Index',orderable: false,searchable: false},
                 {data: 'description'},
-                {data: 'name'},
+                {data: 'user.name'},
                 {data: 'action',orderable: false,searchable: false},
             ],
         dom: "<'row'<'col-md-2'l><'col-md-3'B><'col-md-7'f>>" +

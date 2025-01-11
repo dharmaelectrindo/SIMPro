@@ -8,7 +8,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TemplateController;
-
+use App\Http\Controllers\TaskController;
 Auth::routes();
 
 Route::post('/login', function ()
@@ -62,6 +62,8 @@ Route::post('employee/import', [EmployeeController::class, 'import'])->name('emp
 
 //Templates
 Route::resource('templates', TemplateController::class)->middleware('auth');
+//Tasks
+Route::resource('tasks', TaskController::class)->middleware('auth');
 
 
 

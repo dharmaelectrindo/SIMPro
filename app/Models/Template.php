@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Auth;
 class Template extends Model
 {
     use SoftDeletes;
@@ -13,11 +13,36 @@ class Template extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'description',
+        'user_crt',
         'user_mdf'
     ];
+    public function user() {
+        return $this->belongsTo(User::class,"user_mdf","id");
+    }
 
-    public function user()
-        {
-            return $this->hasOne(User::class,"id","user_mdf");
-        }
+    protected static function boot()
+    {
+        parent::boot();
+
+
+        static::creating(function ($model) {
+            try {
+               
+                $model->user_crt = auth()->id();
+                $model->user_mdf = auth()->id();
+            } catch (UnsatisfiedDependencyException $e) {
+                abort(500, $e->getMessage());
+            }
+            
+        });
+
+        static::updating(function ($model) {
+            $model->user_mdf = auth()->id();
+        });
+
+        static::deleting(function ($model) {
+            // Logika sebelum hapus
+        });
+    }
+    
 }
