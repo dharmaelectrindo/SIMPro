@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Employee;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use DataTables;
 use File;
@@ -134,10 +136,10 @@ class UserController extends Controller
                 ->addColumn('action', function ($row) {
                     $btn = '';
                     if (Auth::user()->can('users edit')) {
-                        $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> Edit</a>';
+                        $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-outline-warning edit"><i class=" uil-edit-alt fw-semibold align-middle me-1"></i>Edit</a>';
                     }
                     if (Auth::user()->can('users delete')) {
-                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i> Delete</a>';
+                        $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-outline-danger delete"><i class="uil-trash-alt fw-semibold align-middle me-1"></i>Delete</a>';
                     }
 
                     return $btn;
@@ -147,7 +149,7 @@ class UserController extends Controller
         }
 
         return view('modules.user_role_permission.user.user', [
-            'title' => 'SIMPro - Pengguna',
+            'title' => 'SIMPro - Users',
         ]);
     }
 
@@ -162,7 +164,7 @@ class UserController extends Controller
             'username' => 'required|unique:users,username,' . $request->userID,
             'email' => 'required|max:255|unique:users,email,' . $request->userID,
             'password' => 'nullable|string|min:8|max:20',
-            'organizationID' => 'required',
+            'organization' => 'required',
             'roles' => 'required',
         ], [
             'name.required' => 'Name harus diisi.',
@@ -276,6 +278,17 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'User deleted successfully.');
     }
 
+    public function getEmployees(Request $request)
+    {
+        $employees = Employee::all(['id', 'npk','employee_name']);
+        return response()->json($employees);
+    }
+
+    public function getOrganizations(Request $request)
+    {
+        $organizations = Organization::all(['id', 'description']);
+        return response()->json($organizations);
+    }
 
     public function getRoles(Request $request)
     {

@@ -9,31 +9,37 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Imports\EmployeeImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class EmployeeController extends Controller
 {
-
     public function __construct() 
     {
         $this->middleware('permission:employees menu', ['only' => ['index']]);
         $this->middleware('permission:employees create', ['only' => ['create','store']]);
         $this->middleware('permission:employees edit', ['only' => ['edit']]);
         $this->middleware('permission:employees delete', ['only' => ['delete']]);
+        $this->middleware('permission:employees import', ['only' => ['import']]);
     }
 
     public function index(Request $request){
         if ($request->ajax()) {
-            $data = DB::table('employees')->orderBy('employee_name', 'ASC')->get();
+            $data = DB::table('employees')
+                ->whereNull('deleted_at')    
+                ->orderBy('employee_name', 'ASC')
+                ->get();
+
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn = '';                 
                         if (Auth::user()->can('employees edit')) {
-                            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> Edit </a>';
+                            $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-outline-warning edit"><i class=" uil-edit-alt fw-semibold align-middle me-1"></i>Edit</a>';
                         }
                         if (Auth::user()->can('employees delete')) {
-                            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i> Delete </a>';
+                            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-outline-danger delete"><i class="uil-trash-alt fw-semibold align-middle me-1"></i>Delete</a>';
                         }
                         return $btn;
                     })
@@ -47,8 +53,11 @@ class EmployeeController extends Controller
                 }
                 
 
+            $check = DB::table('employees')->pluck('id')->first();
+
             return view('modules.master_data.employee', [
                 'title' => 'SIMPro - Employees',
+                'check' => $check
             ]);
     } 
 
@@ -129,6 +138,18 @@ class EmployeeController extends Controller
         return response()->json([
             'success' => true, 
             'message' => 'Data berhasil dihapus.']);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx|max:10000'
+        ]);
+
+        Excel::import(new EmployeeImport, $request->file('file'));
+
+        //  return response
+        return response()->json(['message' => 'Data berhasil di import'], 200);
     }
 
 

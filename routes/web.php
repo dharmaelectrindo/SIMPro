@@ -50,6 +50,7 @@ Route::get('/users', [UserController::class, 'users'])->name('users.users');
 Route::post('/users/delete', [UserController::class, 'delete'])->name('users.delete');
 Route::get('/getemployees', [UserController::class, 'getEmployees'])->name('users.getEmployees');
 Route::get('/getEmployeeId', [UserController::class, 'getEmployeeId'])->name('users.getEmployeeId');
+Route::get('/getorganizations', [UserController::class, 'getOrganizations'])->name('users.getOrganizations');
 Route::get('/getroles', [UserController::class, 'getRoles'])->name('users.getRoles');
 
 // Organization
@@ -57,6 +58,7 @@ Route::resource('organizations', OrganizationController::class);
 
 //Employees
 Route::resource('employees', EmployeeController::class)->middleware('auth');
+Route::post('employee/import', [EmployeeController::class, 'import'])->name('employees.import')->middleware('auth');
 
 //Templates
 Route::resource('templates', TemplateController::class)->middleware('auth');

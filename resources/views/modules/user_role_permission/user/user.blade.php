@@ -6,55 +6,47 @@
 
 <div class="container-fluid">
 
-    <!-- Page Header -->
-    <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-        <h3 class="page-title fw-semibold fs-18 mb-0">Users</h3>
-        <div class="ms-md-1 ms-0">
-            <nav>
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
                 @can('users create')
                     <div class="d-flex">
                         <a href="javascript:void(0)" class="btn btn-sm btn-primary btn-wave waves-light waves-effect waves-light" id="create"><i class="ri-add-line fw-semibold align-middle me-1"></i> Create New</a>                  
                     </div>
                 @endcan
-                {{-- <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Master Data</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Customers</li>
-                </ol> --}}
-            </nav>
+                </div>
+                <h4 class="page-title">Users</h4>
+            </div>
         </div>
     </div>
-    <!-- Page Header Close -->
+    <!-- end page title -->
 
     <!-- Start::row -->
     <div class="row">
         <div class="col-xl-12">
             <div class="card custom-card">
-                {{-- <div class="card-header justify-content-between">
-                    <div class="card-title">Customers</div>               
-                </div> --}}
                 <div class="card-body">
-                    <div class="table-responsive mb-4">
-                        <table class="table text-nowrap table-bordered" id="users">
-                            <thead>
-                                <tr>
-                                    <th width="50px">#</th>
-                                    <th>NAME</th>
-                                    <th>EMAIL</th>
-                                    <th>USERNAME</th>
-                                    <th>ORGANIZATION</th>
-                                    <th>ROLES</th>
-                                    <th width="107px">ACTIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+                    <table class="table table-responsive table-bordered" id="users">
+                        <thead>
+                            <tr>
+                                <th width="50px">#</th>
+                                <th>NAME</th>
+                                <th>EMAIL</th>
+                                <th>USERNAME</th>
+                                <th>ORGANIZATION</th>
+                                <th>ROLES</th>
+                                <th width="200px">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <!--End::row -->
 
 </div>
 
@@ -63,7 +55,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="modelHeading"></h6>
+                <h4 class="modal-title" id="modelHeading"></h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4">
@@ -75,8 +67,10 @@
                     <div class="row gy-2">
                         <div class="col-xl-12">
                             <input type="hidden" name="userID" id="userID">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" id="name" name="name" class="form-control" placeholder="Name">
+                            <label for="name" class="form-label">Nama</label>
+                            <select id="name" name="name" class="form-select" aria-label=".form-select-sm example">
+                                <option value="">-- Pilih Nama --</option>
+                            </select>
                         </div>
                         <div class="col-xl-12">
                             <label for="email" class="form-label">Email</label>
@@ -97,8 +91,8 @@
                             </select>
                         </div>
                         <div class="col-xl-12">
-                            <label for="role" class="form-label">Role</label>
-                            <select id="role" name="role[]" class="form-select" aria-label=".form-select-sm example">
+                            <label for="roles" class="form-label">Role</label>
+                            <select id="roles" name="roles[]" class="form-select" aria-label=".form-select-sm example">
                                 <option value="">-- Pilih Role --</option>
                             </select>
                         </div>                                                                                                                                                                                                                       
@@ -117,7 +111,7 @@
 
 @section('scripts')
 
-<!-- CRUD User -->
+<!-- CRUD Users -->
 <script>
 $(document).ready(function (){
     $.ajaxSetup({
@@ -135,9 +129,9 @@ $(document).ready(function (){
             {data: 'name'},
             {data: 'email'},
             {data: 'username'},
-            {data: 'organization'},
-            {data: 'roles', orderable: false, searchable: false},
-            {data: 'action', orderable: false, searchable: false}
+            {data: 'organization', className: 'text-center'},
+            {data: 'roles', orderable: false, searchable: false, className: 'text-center'},
+            {data: 'action', orderable: false, searchable: false, className: 'text-center'},
         ],
         dom: "<'row'<'col-md-2'l><'col-md-3'B><'col-md-7'f>>" +
              "<'row'<'col-md-12'tr>>" +
@@ -150,82 +144,77 @@ $(document).ready(function (){
     });
 
 
+
     function fetchEmployees() {
         $.ajax({
             url: "{{ route('users.getEmployees') }}",
             type: 'GET',
             dataType: 'json',
             success: function(data) {
-                var employees = new Bloodhound({
-                    datumTokenizer: Bloodhound.tokenizers.whitespace,
-                    queryTokenizer: Bloodhound.tokenizers.whitespace,
-                    local: $.map(data, function(employee) {
-                        return employee.employee_name; 
-                    })
-                });
+            const employees = data.map((employee) => ({
+                id: employee.id,
+                text: employee.employee_name,
+                npk: employee.npk,
+            }));
 
-                $('#name').typeahead(
-                    {
-                        hint: true,
-                        highlight: true,
-                        minLength: 1
-                    },
-                    {
-                        name: 'name',
-                        source: employees
-                    }
-                );
+            $('#name').select2({
+                data: employees,
+                placeholder: '-- Pilih Nama --',
+                allowClear: true,
+            });
 
+            $('#name').on('change', function() {
+                const selectedOption = $(this).select2('data')[0];
+                if (selectedOption) {
+                $('#username').val(selectedOption.npk);
+                } else {
+                $('#username').val('');
+                }
+            });
             },
-            error: function(error) {
-                console.log('Error fetching employees:', error);
-            }
+            error: function(xhr, status, error) {
+            console.error('Error fetching employees:', error);
+            },
         });
     }
 
-    $('#employeeName').on('change', function() {
-        var employeeName = $(this).val();  
 
-        if (employeeName) {
-            $.ajax({
-                url: "{{ route('users.getEmployeeId') }}",
-                type: 'GET',
-                data: {
-                    employee_name: employeeName
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.employee_id) {
-                        $('#employee_id').val(response.employee_id);  
-                    } else {
-                        $('#employee_id').val('');  
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching employee ID:', error);
-                    $('#employee_id').val(''); 
-                }
-            });
-        } else {
-            $('#employee_id').val('');
-        }
-    });
 
+    function fetchOrganizations() {
+        $.ajax({
+            url: "{{ route('users.getOrganizations') }}", // make sure this is your correct route
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var organizationDropdown = $('#organization');
+                organizationDropdown.empty();
+                organizationDropdown.append('<option value="">-- Pilih Organization --</option>');
+
+                $.each(data, function (key, organization) {
+                    organizationDropdown.append('<option value="' + organization.id + '">' + organization.description + '</option>');
+                });
+            },
+            error: function (error) {
+                console.log('Error fetching organizations:', error);
+            }
+        });
+    }
 
     function fetchRoles() {
         $.ajax({
             url: "{{ route('users.getRoles') }}",
             type: 'GET',
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 var rolesDropdown = $('#roles');
                 rolesDropdown.empty();
-                rolesDropdown.append('<option value="">-- Pilih Roles --</option>');
-                $.each(data, function(key, role) {
-                    rolesDropdown.append('<option value="' + role.name + '">' + role.name + '</option>');
+                rolesDropdown.append('<option value="">-- Select Role --</option>');
+
+                $.each(data, function (key, role) {
+                    rolesDropdown.append('<option value="' + role.id + '">' + role.name + '</option>');
                 });
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Error fetching roles:', error);
             }
         });
@@ -233,18 +222,20 @@ $(document).ready(function (){
     
 
     $('#create').click(function () {
-        $('#saveBtn').val("create"); 
+        $('#saveBtn').val("create");
         $('#userID').val('');
         $('#name').val('');
         $('#email').val('');
         $('#username').val('');
-        $('#organization').val('');
-        $('#roles').val('');
+        $('#employeeName').val('').trigger('change');
+        $('#organization').val('').trigger('change');
+        $('#roles').val('').trigger('change');
         $('.error-msg').hide();
         $('#userForm').trigger("reset");
         $('.modal-title').html("Create");
         $('#formModel').modal('show');
         fetchEmployees();
+        fetchOrganizations();
         fetchRoles();
     });
 
@@ -261,23 +252,17 @@ $(document).ready(function (){
             $('#name').val(data.user.name);
             $('#email').val(data.user.email);
             $('#username').val(data.user.username);
-            $('#password').val();
-
+            
+            // Populate roles
             var roles = data.user.roles.map(function(role) {
-                return role.name;
+                return role.id;
             });
             $('#roles').val(roles).trigger('change');
 
-            var rolesSelect = $('#roles');
-            rolesSelect.empty();
-            $.each(data.roles, function(key, value) {
-                rolesSelect.append('<option value="' + key + '">' + value + '</option>');
-            });
-
-            $('#roles').val(roles).trigger('change');
+            // Populate organizations
+            $('#organization').val(data.user.organization_id).trigger('change');
         });
     });
-
 
     $('#saveBtn').click(function (e) {
         e.preventDefault();

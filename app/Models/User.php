@@ -60,7 +60,7 @@ class User extends Authenticatable
     public static function boot()
     {
         parent::boot();
-
+        
         static::creating(function ($model) {
             if (auth()->check()) {
                 $model->user_crt = auth()->id();
