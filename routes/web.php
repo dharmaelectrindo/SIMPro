@@ -9,6 +9,9 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProjectController;
+
 Auth::routes();
 
 Route::post('/login', function ()
@@ -41,12 +44,11 @@ Route::get('/roles/{roles}/assign-permissions', [RoleController::class, 'assignP
 Route::post('/roles/give-permissions', [RoleController::class, 'givePermissionToRole'])->name('roles.give-permissions');
 
 
-// Permission
+// Permissions
 Route::resource('permissions', PermissionController::class);
 
 // User
 Route::resource('users', UserController::class)->middleware('auth');
-Route::get('/users', [UserController::class, 'users'])->name('users.users');
 Route::post('/users/delete', [UserController::class, 'delete'])->name('users.delete');
 Route::get('/getemployees', [UserController::class, 'getEmployees'])->name('users.getEmployees');
 Route::get('/getEmployeeId', [UserController::class, 'getEmployeeId'])->name('users.getEmployeeId');
@@ -64,6 +66,12 @@ Route::post('employee/import', [EmployeeController::class, 'import'])->name('emp
 Route::resource('templates', TemplateController::class)->middleware('auth');
 //Tasks
 Route::resource('tasks', TaskController::class)->middleware('auth');
+Route::post('/tasks/detail', [TaskController::class, 'detail'])->name('tasks.detail');
 
+//Customers
+Route::resource('customers', CustomerController::class)->middleware('auth');
+
+//Projects
+Route::resource('projects', ProjectController::class)->middleware('auth');
 
 

@@ -28,6 +28,49 @@ class UserController extends Controller
     }
 
 
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = User::with('employee', 'organization', 'roles')
+                ->select('users.*')
+                ->orderBy('name', 'ASC');
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('employee', function ($data) {
+                    return $data->employee->employee_name ?? '-';
+                })
+                ->addColumn('organization', function ($data) {
+                    return $data->organization->description ?? '-';
+                })
+                ->addColumn('roles', function ($data) {
+                    $badges = '';
+                    foreach ($data->roles as $role) {
+                        $badges .= '<span class="badge bg-warning">' . $role->name . '</span> ';
+                    }
+                    return $badges;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '';
+                    if (Auth::user()->can('users edit')) {
+                        $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-outline-warning edit"><i class=" uil-edit-alt fw-semibold align-middle me-1"></i>Edit</a>';
+                    }
+                    if (Auth::user()->can('users delete')) {
+                        $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-outline-danger delete"><i class="uil-trash-alt fw-semibold align-middle me-1"></i>Delete</a>';
+                    }
+
+                    return $btn;
+                })
+                ->rawColumns(['employee', 'organization', 'roles', 'action'])
+                ->make(true);
+        }
+
+        return view('modules.user_role_permission.user.user', [
+            'title' => 'SIMPro - Users',
+        ]);
+    }
+
+
     public function login()
     {
         if (Auth::check()) { 
@@ -104,53 +147,12 @@ class UserController extends Controller
     } 
 
 
-
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/');
-    }
-
-
-    public function users(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = User::with('organization', 'roles')
-                ->select('users.*')
-                ->orderBy('name', 'ASC');
-
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('organization', function ($data) {
-                    return $data->organization ? $data->organization->description : '-';
-                })
-                ->addColumn('roles', function ($data) {
-                    $badges = '';
-                    foreach ($data->roles as $role) {
-                        $badges .= '<span class="badge bg-warning">' . $role->name . '</span> ';
-                    }
-                    return $badges;
-                })
-                ->addColumn('action', function ($row) {
-                    $btn = '';
-                    if (Auth::user()->can('users edit')) {
-                        $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-outline-warning edit"><i class=" uil-edit-alt fw-semibold align-middle me-1"></i>Edit</a>';
-                    }
-                    if (Auth::user()->can('users delete')) {
-                        $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-outline-danger delete"><i class="uil-trash-alt fw-semibold align-middle me-1"></i>Delete</a>';
-                    }
-
-                    return $btn;
-                })
-                ->rawColumns(['organization', 'roles', 'action'])
-                ->make(true);
-        }
-
-        return view('modules.user_role_permission.user.user', [
-            'title' => 'SIMPro - Users',
-        ]);
     }
 
 
@@ -235,25 +237,10 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        // Find user by ID
-        $user = User::with('roles')->findOrFail($id); 
-
-        // Get all roles
-        $roles = Role::pluck('name', 'name')->all(); 
-        $hash = $user->password;
-        
-
-        // try {
-        //     // Attempt to decrypt the encrypted data
-        //     $decryptedPass = Crypt::decryptString($hash);
-        // } catch (DecryptException $e) {
-        //     return response()->json(['error' => 'Failed to decrypt data'], 500);
-        // }
+        $user = User::with('roles', 'organization')->findOrFail($id);
 
         return response()->json([
             'user' => $user,
-            'roles' => $roles,
-            // 'password' => $user->password,
         ]);
     }
 

@@ -26,15 +26,14 @@ class OrganizationController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn = '';                 
-                            if (Auth::user()->can('organizations edit')) {
-                                $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-warning edit"><i class="ri-edit-line fw-semibold align-middle me-1"></i> Edit </a>';
-                            }
-                            if (Auth::user()->can('organizations delete')) {
-                                $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-danger delete"><i class="ri-close-line fw-semibold align-middle me-1"></i> Delete </a>';
-                            }
+                        if (Auth::user()->can('organizations edit')) {
+                            $btn = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="btn btn-sm btn-outline-warning edit"><i class=" uil-edit-alt fw-semibold align-middle me-1"></i>Edit</a>';
+                        }
+                        if (Auth::user()->can('organizations delete')) {
+                            $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-sm btn-outline-danger delete"><i class="uil-trash-alt fw-semibold align-middle me-1"></i>Delete</a>';
+                        }
                         return $btn;
                     })
-                    
                     ->addColumn('created_at', function($row)
                         {
                             $date = date("d/m/Y", strtotime($row->created_at));
@@ -61,9 +60,9 @@ class OrganizationController extends Controller
             'organizationsLevel' => 'required',
         ],
         [
-            'organizationsCode.required' => 'Please Entry Code',
-            'organizationsCode.unique' => 'Code Alredy',
-            'description.required' => 'Please Entry Description',
+            'organizationsCode.required' => 'Organization Code harus diisi.',
+            'organizationsCode.unique' => 'Organization Code sudah ada.',
+            'description.required' => 'Description harus diisi.',
         ],
             
     );
@@ -98,9 +97,9 @@ class OrganizationController extends Controller
 
     public function destroy(Request $request)
     {
-        $Organization = Organization::find($request->id);
-        if ($Organization != null) {
-            $Organization->delete();
+        $data = Organization::find($request->id);
+        if ($data != null) {
+            $data->delete();
         }
         return response()->json(['success' => true, 'message' => 'Role deleted successfully.','id' => $request->id]);
     }

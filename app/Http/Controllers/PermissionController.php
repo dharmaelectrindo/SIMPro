@@ -19,7 +19,7 @@ class PermissionController extends Controller
         $this->middleware('permission:permissions delete', ['only' => ['delete']]);
     }
 
-    public function index(Request $request)
+    public function index(Request $request) 
     {
         if ($request->ajax()) {
             $data = DB::table('permissions')->orderBy('name', 'ASC')->get();

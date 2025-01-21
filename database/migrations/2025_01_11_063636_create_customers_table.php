@@ -11,20 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organizations', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string("organizations_code",8);
-            $table->unsignedBigInteger("organizations_level");
-            $table->string("description",100);
+            $table->string("customer_code",5);
+            $table->string("customer_name",100);
             $table->unsignedBigInteger("user_crt");
             $table->unsignedBigInteger("user_mdf");
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->foreign('user_crt')->references('id')->on('users')->onDelete("cascade");
             $table->foreign('user_mdf')->references('id')->on('users')->onDelete("cascade");
         });
-        
     }
 
     /**
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organizations');
+        Schema::dropIfExists('customers');
     }
 };

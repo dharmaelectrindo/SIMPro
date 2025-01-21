@@ -5,24 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-  
 
-class Employee extends Model
+class Customer extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $primary = ['id'];
     protected $fillable = [
-        'npk',
-        'employee_name',
-        'email',
-        'employee_position',
-        'mobile_number',
+        'customer_code',
+        'customer_name',
         'user_crt',
         'user_mdf'
     ];
-    
 
     public static function boot()
     {
@@ -40,7 +34,4 @@ class Employee extends Model
             // Logika sebelum hapus
         });
     }
-    
-
-
 }

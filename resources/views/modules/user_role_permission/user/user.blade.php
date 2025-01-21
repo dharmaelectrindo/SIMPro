@@ -123,7 +123,7 @@ $(document).ready(function (){
     var table = $('#users').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('users.users') }}",
+        ajax: "{{ route('users.index') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_Row_Index', orderable: false, searchable: false},
             {data: 'name'},
@@ -159,7 +159,7 @@ $(document).ready(function (){
 
             $('#name').select2({
                 data: employees,
-                placeholder: '-- Pilih Nama --',
+                placeholder: '-- Pilih --',
                 allowClear: true,
             });
 
@@ -242,10 +242,10 @@ $(document).ready(function (){
 
     $('body').on('click', '.edit', function () {
         var id = $(this).data('id');
-        $.get("{{ route('users.users') }}" + '/' + id + '/edit', function (data) {
+        $.get("{{ route('users.index') }}" + '/' + id + '/edit', function (data) {
             $('.error-msg').hide();
             $('#userForm').trigger("reset");
-            $('#saveBtn').val("edit");
+            $('#saveBtn').val("edit-user");
             $('.modal-title').html("Edit");
             $('#formModel').modal('show');
             $('#userID').val(data.user.id);
@@ -253,14 +253,16 @@ $(document).ready(function (){
             $('#email').val(data.user.email);
             $('#username').val(data.user.username);
             
+
             // Populate roles
             var roles = data.user.roles.map(function(role) {
                 return role.id;
             });
-            $('#roles').val(roles).trigger('change');
+            $.each(roles, function(index, value) {
+                $('#roles option[value="' + value + '"]').prop('selected', true);
+            });
 
-            // Populate organizations
-            $('#organization').val(data.user.organization_id).trigger('change');
+            $('#organization option[value="' + data.user.organization.id + '"]').prop('selected', true);
         });
     });
 

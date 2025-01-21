@@ -8,7 +8,7 @@
 
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-        <h3 class="page-title fw-semibold fs-18">Organization</h3>
+        <h3 class="page-title fw-semibold fs-18">Organizations</h3>
         <div class="ms-md-1 ms-0">
             <nav>
                 @can('organizations create')
@@ -26,7 +26,7 @@
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-body">
-                    <table class="table table-responsive table-bordered" id="organization">
+                    <table class="table table-responsive table-bordered" id="organizations">
                         <thead>
                             <tr>
                                 <th width="40px">#</th>
@@ -53,7 +53,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="modelHeading"></h6>
+                <h4 class="modal-title" id="modelHeading"></h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4">
@@ -62,36 +62,36 @@
                     <div class="alert alert-danger error-msg" style="display:none">
                         <ul></ul>
                     </div>
-                    <div class="row gy-2">
-                        <div class="col-xl-12">
-                            <label for="organizationsCode" class="form-label">Code</label>
-                            <input type="text" id="organizationsCode" name="organizationsCode" class="form-control" placeholder="Code" maxlength="8">
-                        </div>                                                                                                                                                                                                      
-                    </div>
-                    <div class="row gy-2">
-                        <div class="col-xl-12">
-                            <label for="organizationsName" class="form-label">Level</label>
-                            <select id="organizationsLevel" name="organizationsLevel" class="form-control">
-                                <option value=""> Choose Level </option> 
-                                <option value="CEO"> CEO </option>
-                                <option value="Divisi"> Divisi </option>
-                                <option value="Department"> Department </option>
-                        </div>                                                                                                                                                                                                      
-                    </div>
-                    <div class="row gy-2">
+                    <div class="row mb-2">
                         <div class="col-xl-12">
                             <input type="hidden" name="organizationsID" id="organizationsID">
-                            <label for="descriptions" class="form-label">Description</label>
-                            <input type="text" id="description" name="description" class="form-control" placeholder="Description">
-                        </div>                                                                                                                                                                                                      
+                            <label class="form-label" for="organizationsCode">Organization Code</label>
+                            <input type="text" id="organizationsCode" name="organizationsCode" class="form-control" placeholder="Organization Code" maxlength="8">
+                        </div>                                                                                                                                               
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-xl-12">
+                            <label class="form-label" for="organizationsLevel">Organization Level</label>
+                            <select id="organizationsLevel" name="organizationsLevel" class="form-control">
+                                <option value="" selected>-Pilih-</option> 
+                                <option value="CEO">CEO</option>
+                                <option value="Divisi">Divisi</option>
+                                <option value="Department">Department</option>
+                            </select>
+                        </div>                                                                                                                                               
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-xl-12">
+                            <label class="form-label" for="description">Description</label>
+                            <textarea id="description" name="description" class="form-control" placeholder="Description"></textarea>
+                        </div>                                                                                                                                               
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save</button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Simpan</button>
             </div>
         </form>
-        </div>
     </div>
 </div>
 
@@ -109,7 +109,7 @@ $(document).ready(function (){
         }
     });
 
-    var table = $('#organization').DataTable({
+    var table = $('#organizations').DataTable({
         processing: true,
         serverSide: true,
         ajax: "{{ route('organizations.index') }}",

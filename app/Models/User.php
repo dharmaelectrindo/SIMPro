@@ -9,7 +9,6 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Eloquent;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Organization;
 
 class User extends Authenticatable
 {
@@ -64,14 +63,17 @@ class User extends Authenticatable
         }
     }
 
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class,"user_mdf","id");
+        return $this->belongsTo(Organization::class);
     }
-    public function organizations() {
-        return $this->hasMany(Organization::class);
-    }
+
 
 
    
